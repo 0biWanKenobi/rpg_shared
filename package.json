@@ -1,0 +1,35 @@
+{
+  "name": "rpg_shared",
+  "version": "1.0.0",
+  "description": "Shared lib for `rpg_master_plugin` and `rpg_player_plugin`",
+  "license": "ISC",
+  "author": "Obi Wan Kenobi",
+  "type": "module",
+  "exports": {
+    "./settings/interfaces": {
+      "types": "./dist/settings/interfaces.d.ts",
+      "import": "./dist/settings/interfaces.js",
+      "require": "./dist/settings/interfaces.cjs"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "settings/interfaces": [
+        "dist/settings/interfaces.d.ts"
+      ]
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "vite build --watch --mode development",
+    "build": "vite build && tsc -p tsconfig.json --emitDeclarationOnly",
+    "yalc:publish": "npm run build && ${YALC_BIN:-$HOME/.local/bin/yalc} publish",
+    "yalc:push": "npm run build && ${YALC_BIN:-$HOME/.local/bin/yalc} push"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3",
+    "vite": "^6.2.0"
+  }
+}
