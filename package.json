@@ -10,12 +10,20 @@
       "types": "./dist/settings/interfaces.d.ts",
       "import": "./dist/settings/interfaces.js",
       "require": "./dist/settings/interfaces.cjs"
+    },
+    "./settings/plugin": {
+      "types": "./dist/settings/plugin.d.ts",
+      "import": "./dist/settings/plugin.js",
+      "require": "./dist/settings/plugin.cjs"
     }
   },
   "typesVersions": {
     "*": {
       "settings/interfaces": [
         "dist/settings/interfaces.d.ts"
+      ],
+      "settings/plugin": [
+        "dist/settings/plugin.d.ts"
       ]
     }
   },
@@ -29,7 +37,11 @@
     "yalc:push": "npm run build && ${YALC_BIN:-$HOME/.local/bin/yalc} push"
   },
   "devDependencies": {
+    "obsidian": "^1.12.3",
     "typescript": "^5.8.3",
     "vite": "^6.2.0"
+  },
+  "dependencies": {
+    "@preact/signals": "^2.8.2"
   }
 }
