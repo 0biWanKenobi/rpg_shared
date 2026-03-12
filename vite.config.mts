@@ -16,6 +16,11 @@ export default defineConfig({
 				format === "es" ? `${entryName}.js` : `${entryName}.cjs`,
 		},
 		rollupOptions: {
+			external: [
+				"@preact/signals",
+				"@preact/signals-core",
+				"obsidian",
+			],
 			output: {
 				preserveModules: true,
 				preserveModulesRoot: "src",
