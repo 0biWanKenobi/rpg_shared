@@ -15,7 +15,13 @@
       "types": "./dist/settings/plugin.d.ts",
       "import": "./dist/settings/plugin.js",
       "require": "./dist/settings/plugin.cjs"
-    }
+    },
+    "./ui/confirmModal": {
+      "types": "./dist/ui/confirmModal.d.ts",
+      "import": "./dist/ui/confirmModal.js",
+      "require": "./dist/ui/confirmModal.cjs"    
+    },
+    "./styles.css": "./dist/rpg_shared.css"
   },
   "typesVersions": {
     "*": {
@@ -24,6 +30,9 @@
       ],
       "settings/plugin": [
         "dist/settings/plugin.d.ts"
+      ],
+      "ui/confirmModal": [
+        "dist/ui/confirmModal.d.ts"
       ]
     }
   },

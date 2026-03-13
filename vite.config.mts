@@ -2,6 +2,8 @@ import { defineConfig } from "vite";
 
 const interfacesEntry = new URL("./src/settings/interfaces.ts", import.meta.url).pathname;
 const pluginEntry = new URL("./src/settings/plugin.ts", import.meta.url).pathname;
+const confirmModalEntry = new URL("./src/ui/confirmModal.ts", import.meta.url).pathname;
+
 
 export default defineConfig({
 	build: {
@@ -9,6 +11,7 @@ export default defineConfig({
 			entry: {
 				"settings/interfaces": interfacesEntry,
 				"settings/plugin": pluginEntry,
+				"ui/confirmModal": confirmModalEntry,
 			},
 			name: "RpgShared",
 			formats: ["es", "cjs"],
