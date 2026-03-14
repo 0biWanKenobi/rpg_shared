@@ -15,6 +15,7 @@
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
     "useUnknownInCatchVariables": true,
+    "types": ["node"],
     "lib": [
       "ES2020",
       "DOM",

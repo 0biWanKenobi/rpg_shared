@@ -19,7 +19,7 @@
     "./ui/confirmModal": {
       "types": "./dist/ui/confirmModal.d.ts",
       "import": "./dist/ui/confirmModal.js",
-      "require": "./dist/ui/confirmModal.cjs"    
+      "require": "./dist/ui/confirmModal.cjs"
     },
     "./styles.css": "./dist/rpg_shared.css"
   },
@@ -46,6 +46,7 @@
     "yalc:push": "npm run build && ${YALC_BIN:-$HOME/.local/bin/yalc} push"
   },
   "devDependencies": {
+    "@types/node": "^25.5.0",
     "obsidian": "^1.12.3",
     "typescript": "^5.8.3",
     "vite": "^6.2.0"

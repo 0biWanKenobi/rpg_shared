@@ -1,8 +1,10 @@
 import { defineConfig } from "vite";
+import { fileURLToPath } from "node:url";
 
-const interfacesEntry = new URL("./src/settings/interfaces.ts", import.meta.url).pathname;
-const pluginEntry = new URL("./src/settings/plugin.ts", import.meta.url).pathname;
-const confirmModalEntry = new URL("./src/ui/confirmModal.ts", import.meta.url).pathname;
+
+const interfacesEntry = fileURLToPath(new URL("./src/settings/interfaces.ts", import.meta.url));
+const pluginEntry = fileURLToPath(new URL("./src/settings/plugin.ts", import.meta.url));
+const confirmModalEntry = fileURLToPath(new URL("./src/ui/confirmModal.ts", import.meta.url));
 
 
 export default defineConfig({
