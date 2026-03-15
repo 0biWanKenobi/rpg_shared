@@ -41,7 +41,8 @@
   ],
   "scripts": {
     "dev": "vite build --watch --mode development",
-    "build": "vite build && tsc -p tsconfig.json --emitDeclarationOnly",
+    "dev:yalc": "PUSH_YALC_ON_WATCH=1 npm run dev",
+    "build": "vite build",
     "yalc:publish": "npm run build && ${YALC_BIN:-$HOME/.local/bin/yalc} publish",
     "yalc:push": "npm run build && ${YALC_BIN:-$HOME/.local/bin/yalc} push"
   },
@@ -49,6 +50,7 @@
     "@types/node": "^25.5.0",
     "obsidian": "^1.12.3",
     "typescript": "^5.8.3",
+    "unplugin-dts": "^1.0.0-beta.6",
     "vite": "^6.2.0"
   },
   "dependencies": {
