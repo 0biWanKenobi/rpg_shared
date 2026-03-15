@@ -1,0 +1,17 @@
+.rpg-tab-set {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 20px;
+}
+
+.rpg-tab-option {
+    padding: 5px;
+    cursor: pointer;
+    font-weight: bold;
+
+    &.rpg-tab-option-selected {
+        color: var(--interactive-accent);
+        border-bottom: 2px solid var(--interactive-accent);
+    }
+}
+

@@ -7,6 +7,9 @@ import { defineConfig, type Plugin } from "vite";
 const interfacesEntry = fileURLToPath(new URL("./src/settings/interfaces.ts", import.meta.url));
 const pluginEntry = fileURLToPath(new URL("./src/settings/plugin.ts", import.meta.url));
 const confirmModalEntry = fileURLToPath(new URL("./src/ui/confirmModal.ts", import.meta.url));
+const tabsEntry = fileURLToPath(new URL("./src/ui/tabs.ts", import.meta.url));
+const headerWithIconEntry = fileURLToPath(new URL("./src/ui/headerWithIcon.ts", import.meta.url));
+const iconButtonEntry = fileURLToPath(new URL("./src/ui/iconButton.ts", import.meta.url));
 
 function yalcPushOnWatch(): Plugin {
 	let pushInFlight = false;
@@ -20,6 +23,7 @@ function yalcPushOnWatch(): Plugin {
 
 		pushInFlight = true;
 		const yalcBin = process.env.YALC_BIN ?? `${process.env.HOME}/.local/bin/yalc`;
+		console.log("Running yalc push...");
 		const child = spawn(yalcBin, ["push", "--quiet"], {
 			stdio: ["ignore", "inherit", "inherit"],
 		});
@@ -66,6 +70,9 @@ export default defineConfig({
 				"settings/interfaces": interfacesEntry,
 				"settings/plugin": pluginEntry,
 				"ui/confirmModal": confirmModalEntry,
+				"ui/tabs": tabsEntry,
+				"ui/headerWithIcon": headerWithIconEntry,
+				"ui/iconButton": iconButtonEntry,
 			},
 			name: "RpgShared",
 			formats: ["es", "cjs"],

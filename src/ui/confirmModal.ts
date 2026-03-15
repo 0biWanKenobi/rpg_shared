@@ -2,7 +2,6 @@ import { Modal, App, ButtonComponent } from "obsidian";
 import "./confirmModal.css";
 
 
-
 export class ConfirmModal extends Modal {
 	private confirmed = false; 
 	

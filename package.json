@@ -21,6 +21,21 @@
       "import": "./dist/ui/confirmModal.js",
       "require": "./dist/ui/confirmModal.cjs"
     },
+    "./ui/tabs": {
+      "types": "./dist/ui/tabs.d.ts",
+      "import": "./dist/ui/tabs.js",
+      "require": "./dist/ui/tabs.cjs"
+    },
+    "./ui/headerWithIcon": {
+      "types": "./dist/ui/headerWithIcon.d.ts",
+      "import": "./dist/ui/headerWithIcon.js",
+      "require": "./dist/ui/headerWithIcon.cjs"
+    },
+    "./ui/iconButton": {
+      "types": "./dist/ui/iconButton.d.ts",
+      "import": "./dist/ui/iconButton.js",
+      "require": "./dist/ui/iconButton.cjs"
+    },
     "./styles.css": "./dist/rpg_shared.css"
   },
   "typesVersions": {
@@ -33,6 +48,15 @@
       ],
       "ui/confirmModal": [
         "dist/ui/confirmModal.d.ts"
+      ],
+      "ui/tabs": [
+        "dist/ui/tabs.d.ts"
+      ],
+      "ui/headerWithIcon": [
+        "dist/ui/headerWithIcon.d.ts"
+      ],
+      "ui/iconButton": [
+        "dist/ui/iconButton.d.ts"
       ]
     }
   },
