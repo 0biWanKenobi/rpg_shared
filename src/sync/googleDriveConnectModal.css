@@ -1,0 +1,42 @@
+.gdrive-connect-modal .modal-content {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.gdrive-device-code-wrapper,
+.gdrive-device-url-wrapper,
+.gdrive-connect-status {
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-m);
+	padding: 12px;
+}
+
+.gdrive-device-code {
+	display: block;
+	font-size: 1.4em;
+	letter-spacing: 0.12em;
+	text-align: center;
+}
+
+.gdrive-device-url-wrapper {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.gdrive-device-url {
+	word-break: break-all;
+}
+
+.gdrive-connect-modal-buttons,
+.gdrive-connect-status-inner {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+
+.gdrive-connect-hint {
+	color: var(--text-muted);
+}

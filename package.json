@@ -36,6 +36,11 @@
       "import": "./dist/ui/iconButton.js",
       "require": "./dist/ui/iconButton.cjs"
     },
+    "./sync/googleDriveAuth": {
+      "types": "./dist/sync/googleDriveAuth.d.ts",
+      "import": "./dist/sync/googleDriveAuth.js",
+      "require": "./dist/sync/googleDriveAuth.cjs"
+    },
     "./styles.css": "./dist/rpg_shared.css"
   },
   "typesVersions": {
@@ -57,6 +62,9 @@
       ],
       "ui/iconButton": [
         "dist/ui/iconButton.d.ts"
+      ],
+      "sync/googleDriveAuth": [
+        "dist/sync/googleDriveAuth.d.ts"
       ]
     }
   },
