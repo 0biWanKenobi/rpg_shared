@@ -75,8 +75,8 @@
     "dev": "vite build --watch --mode development",
     "dev:yalc": "PUSH_YALC_ON_WATCH=1 npm run dev",
     "build": "vite build",
-    "yalc:publish": "npm run build && ${YALC_BIN:-$HOME/.local/bin/yalc} publish",
-    "yalc:push": "npm run build && ${YALC_BIN:-$HOME/.local/bin/yalc} push"
+    "yalc:publish": "npm run build && ${YALC_BIN:-$HOME/.local/bin/yalc} publish --no-workspace-resolve",
+    "yalc:push": "npm run build && ${YALC_BIN:-$HOME/.local/bin/yalc} push --no-workspace-resolve"
   },
   "devDependencies": {
     "@types/node": "^25.5.0",
