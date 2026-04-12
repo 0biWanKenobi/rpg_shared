@@ -25,7 +25,7 @@ function yalcPushOnWatch(): Plugin {
 		pushInFlight = true;
 		const yalcBin = process.env.YALC_BIN ?? `${process.env.HOME}/.local/bin/yalc`;
 		console.log("Running yalc push...");
-		const child = spawn(yalcBin, ["push", "--quiet"], {
+		const child = spawn(yalcBin, ["push", "--quiet", "--no-workspace-resolve"], {
 			stdio: ["ignore", "inherit", "inherit"],
 		});
 
@@ -56,7 +56,7 @@ function yalcPushOnWatch(): Plugin {
 }
 
 
-export default defineConfig({
+export default defineConfig(({mode}) => ({
 	plugins: [
 		dts({
 			tsconfigPath: "./tsconfig.json",
@@ -66,6 +66,7 @@ export default defineConfig({
 		yalcPushOnWatch(),
 	],
 	build: {
+		sourcemap: mode == "development" ? "inline": false,
 		lib: {
 			entry: {
 				"settings/interfaces": interfacesEntry,
@@ -95,4 +96,4 @@ export default defineConfig({
 		target: "es2020",
 		emptyOutDir: true,
 	},
-});
+}));

@@ -10,7 +10,11 @@ export type GoogleDeviceAuthorizationView = {
 export class GoogleDriveConnectModal extends Modal {
 	private statusEl: HTMLElement | null = null;
 	private cancelled = false;
+	private buttonClicked = false;
 	private wasclosedResolver = Promise.withResolvers<boolean>();
+
+	private cancelButton: ButtonComponent | undefined = undefined;
+	private loginButton: ButtonComponent | undefined = undefined;
 
 	constructor(app: App) {
 		super(app);
@@ -18,63 +22,51 @@ export class GoogleDriveConnectModal extends Modal {
 		this.setTitle("Connect Google Drive");
 	}
 
-	showDeviceAuthorizationAsync(data: GoogleDeviceAuthorizationView) {
+	showDeviceAuthorizationAsync(authUrl: string) {
 		this.contentEl.empty();
 
 		this.contentEl.createEl("p", {
-			text: "Open Google’s verification page in your browser, then enter the code shown below.",
+			text: "Click the button below to login to your Google Drive from the web.",
 		});
 
-		const codeWrapper = this.contentEl.createDiv({ cls: "gdrive-device-code-wrapper" });
-		codeWrapper.createEl("code", {
-			text: data.userCode,
-			cls: "gdrive-device-code",
-		});
-
-		const urlWrapper = this.contentEl.createDiv({ cls: "gdrive-device-url-wrapper" });
-		urlWrapper.createEl("span", { text: "Verification URL" });
-		urlWrapper.createEl("code", {
-			text: data.verificationUrl,
-			cls: "gdrive-device-url",
-		});
-
+		this.statusEl = this.contentEl.createDiv({ cls: "gdrive-connect-status" }, (el) => el.hide())
 		const buttons = this.contentEl.createDiv({ cls: "gdrive-connect-modal-buttons" });
+		
 
-		new ButtonComponent(buttons)
-			.setButtonText("Open Google")
-			.setCta()
-			.onClick(() => window.open(data.verificationUrl, "_blank", "noopener,noreferrer"));
+		this.loginButton = new ButtonComponent(buttons)
+		.setButtonText("Login")
+		.setClass("gdrive-login-btn")
+		.setCta()
+		.onClick(() => {
+			this.buttonClicked = true;
+			this.loginButton!.setDisabled(true);
+			this.statusEl?.show();
+			this.setStatus("Waiting for Google sign-in…", "loader");
+			window.open(authUrl, "_blank", "noopener,noreferrer")
+		});
 
-		new ButtonComponent(buttons)
-			.setButtonText("Copy code")
-			.onClick(async () => {
-				await navigator.clipboard.writeText(data.userCode);
-				new Notice("Google verification code copied.");
-			});
 
-		new ButtonComponent(buttons)
-			.setButtonText("Copy link")
-			.onClick(async () => {
-				await navigator.clipboard.writeText(data.verificationUrl);
-				new Notice("Google verification link copied.");
-			});
-
-		new ButtonComponent(buttons)
+		this.cancelButton = new ButtonComponent(buttons)
 			.setButtonText("Cancel")
 			.onClick(() => {
+				this.buttonClicked = true;
 				this.cancelled = true;
 				this.close();
 			})
 
-		this.statusEl = this.contentEl.createDiv({ cls: "gdrive-connect-status" });
-		this.setStatus("Waiting for Google sign-in…", "loader");
-
-		this.contentEl.createEl("small", {
-			text: `This code expires in about ${Math.floor(data.expiresIn / 60)} minutes.`,
-			cls: "gdrive-connect-hint",
-		});
-
 		return this.wasclosedResolver.promise;
+	}
+
+	setButtonsAfterLogin(){
+		this.cancelButton
+			?.setButtonText("Close")
+			.onClick(() => {
+				this.buttonClicked = true;
+				this.close();
+			});
+		this.loginButton
+			?.setClass("gdrive-login-btn")
+			.setClass("hidden")
 	}
 
 	setStatus(message: string, icon?: string) {
@@ -89,6 +81,20 @@ export class GoogleDriveConnectModal extends Modal {
 			setIcon(iconEl, icon);
 		}
 		statusInner.createEl("span", { text: message });
+	}
+
+	onOpen(): Promise<void> | void {
+		this.modalEl.querySelector<HTMLElement>(".modal-close-button")
+		?.addEventListener("click", () => {
+			this.cancelled = true;
+			this.onClose();
+			super.close();
+		})
+	}
+
+	close(): void {
+		if(!this.buttonClicked) return;
+		super.close();
 	}
 
 	onClose() {

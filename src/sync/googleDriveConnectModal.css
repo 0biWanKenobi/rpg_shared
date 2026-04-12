@@ -37,6 +37,23 @@
 	flex-wrap: wrap;
 }
 
+.gdrive-connect-status-inner svg.lucide-loader{
+	animation: rotation 1s linear infinite;
+}
+
+.gdrive-login-btn.hidden {
+	display: none;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
 .gdrive-connect-hint {
 	color: var(--text-muted);
 }
