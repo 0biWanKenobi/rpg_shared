@@ -1,27 +1,26 @@
 import { computed, effect, ReadonlySignal, type Signal, signal } from "@preact/signals";
-import type { App } from "obsidian";
 import "./tabs.css";
 
 export class Tabs {
 
     private options: TabOption[];
-    private rootEl: HTMLDivElement | undefined;
+    private rootEl: HTMLDivElement;
     public readonly selectedTabIndex = signal(0);
 
     constructor(){
-        this.options = [];        
+        this.options = [];
+        this.rootEl = createDiv({cls: 'rpg-tab-set'});
     }
     
-    addToContainer(containerEl: HTMLElement){
-        this.rootEl = containerEl.createDiv();
-        this.rootEl.className = 'rpg-tab-set';
+    addToContainer(containerEl: HTMLElement){        
+        containerEl.appendChild(this.rootEl)
         return this;
     }
 
     addTab(name: string, onClick: () => void){
         const option = new TabOption(name, this.options.length, this.selectedTabIndex, onClick);
         this.options.push(option);
-        this.rootEl?.appendChild(option.rootEl);
+        this.rootEl.appendChild(option.rootEl);
         return this;
     }
 }
