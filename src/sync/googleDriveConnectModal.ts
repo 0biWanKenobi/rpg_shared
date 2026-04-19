@@ -10,7 +10,7 @@ export type GoogleDeviceAuthorizationView = {
 export class GoogleDriveConnectModal extends Modal {
 	private statusEl: HTMLElement | null = null;
 	private cancelled = false;
-	private buttonClicked = false;
+	private loginStarted = false;
 	private wasclosedResolver = Promise.withResolvers<boolean>();
 
 	private cancelButton: ButtonComponent | undefined = undefined;
@@ -38,7 +38,7 @@ export class GoogleDriveConnectModal extends Modal {
 		.setClass("gdrive-login-btn")
 		.setCta()
 		.onClick(() => {
-			this.buttonClicked = true;
+			this.loginStarted = true;
 			this.loginButton!.setDisabled(true);
 			this.statusEl?.show();
 			this.setStatus("Waiting for Google sign-in…", "loader");
@@ -49,9 +49,8 @@ export class GoogleDriveConnectModal extends Modal {
 		this.cancelButton = new ButtonComponent(buttons)
 			.setButtonText("Cancel")
 			.onClick(() => {
-				this.buttonClicked = true;
 				this.cancelled = true;
-				this.close();
+				this.userClose();
 			})
 
 		return this.wasclosedResolver.promise;
@@ -61,8 +60,7 @@ export class GoogleDriveConnectModal extends Modal {
 		this.cancelButton
 			?.setButtonText("Close")
 			.onClick(() => {
-				this.buttonClicked = true;
-				this.close();
+				this.userClose();
 			});
 		this.loginButton
 			?.setClass("gdrive-login-btn")
@@ -87,13 +85,16 @@ export class GoogleDriveConnectModal extends Modal {
 		this.modalEl.querySelector<HTMLElement>(".modal-close-button")
 		?.addEventListener("click", () => {
 			this.cancelled = true;
-			this.onClose();
-			super.close();
+			this.userClose();
 		})
 	}
 
 	close(): void {
-		if(!this.buttonClicked) return;
+		return;
+	}
+
+	private userClose(){
+		this.onClose();
 		super.close();
 	}
 
