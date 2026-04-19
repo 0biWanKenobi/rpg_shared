@@ -11,6 +11,7 @@ const tabsEntry = fileURLToPath(new URL("./src/ui/tabs.ts", import.meta.url));
 const headerWithIconEntry = fileURLToPath(new URL("./src/ui/headerWithIcon.ts", import.meta.url));
 const iconButtonEntry = fileURLToPath(new URL("./src/ui/iconButton.ts", import.meta.url));
 const googleDriveAuthEntry = fileURLToPath(new URL("./src/sync/googleDriveAuth.ts", import.meta.url));
+const googleDriveTokenCryptoEntry = fileURLToPath(new URL("./src/sync/googleDriveTokenCrypto.ts", import.meta.url));
 
 function yalcPushOnWatch(): Plugin {
 	let pushInFlight = false;
@@ -76,6 +77,7 @@ export default defineConfig(({mode}) => ({
 				"ui/headerWithIcon": headerWithIconEntry,
 				"ui/iconButton": iconButtonEntry,
 				"sync/googleDriveAuth": googleDriveAuthEntry,
+				"sync/googleDriveTokenCrypto": googleDriveTokenCryptoEntry,
 			},
 			name: "RpgShared",
 			formats: ["es", "cjs"],

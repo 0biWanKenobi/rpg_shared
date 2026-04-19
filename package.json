@@ -41,6 +41,11 @@
       "import": "./dist/sync/googleDriveAuth.js",
       "require": "./dist/sync/googleDriveAuth.cjs"
     },
+    "./sync/googleDriveTokenCrypto": {
+      "types": "./dist/sync/googleDriveTokenCrypto.d.ts",
+      "import": "./dist/sync/googleDriveTokenCrypto.js",
+      "require": "./dist/sync/googleDriveTokenCrypto.cjs"
+    },
     "./styles.css": "./dist/rpg_shared.css"
   },
   "typesVersions": {
@@ -65,6 +70,9 @@
       ],
       "sync/googleDriveAuth": [
         "dist/sync/googleDriveAuth.d.ts"
+      ],
+      "sync/googleDriveTokenCrypto": [
+        "dist/sync/googleDriveTokenCrypto.d.ts"
       ]
     }
   },
