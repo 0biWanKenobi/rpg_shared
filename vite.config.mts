@@ -95,7 +95,7 @@ export default defineConfig(({mode}) => ({
 				preserveModulesRoot: "src",
 			},
 		},
-		target: "es2020",
+		target: "esnext",
 		emptyOutDir: true,
 	},
 }));

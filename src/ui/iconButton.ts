@@ -1,10 +1,11 @@
 import { ButtonComponent, setIcon } from "obsidian";
 import "./iconButton.css"
 
-export class IconButtonComponent extends ButtonComponent {
+class IconButtonComponent extends ButtonComponent {
     constructor(containerEl: HTMLElement) {
         super(containerEl);
         this.buttonEl.classList.add('icon-button');
+        Object.seal(this)
     }
 
     addIcon(icon: string): this {
@@ -14,3 +15,7 @@ export class IconButtonComponent extends ButtonComponent {
         return this;
     }
 }
+
+Object.freeze(IconButtonComponent.prototype);
+
+export {IconButtonComponent}

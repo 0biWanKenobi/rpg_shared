@@ -2,10 +2,10 @@ import { Modal, App, ButtonComponent } from "obsidian";
 import "./confirmModal.css";
 
 
-export class ConfirmModal extends Modal {
-	private confirmed = false; 
+class ConfirmModal extends Modal {
+	#confirmed = false; 
 	
-	private responseResolver = Promise.withResolvers<boolean>();
+	#responseResolver = Promise.withResolvers<boolean>();
 	
 	constructor(app: App) {
 		super(app);
@@ -16,26 +16,32 @@ export class ConfirmModal extends Modal {
 					.setButtonText('Yes')
 					.setWarning()
 					.onClick(() => {
-						this.confirmed = true;
+						this.#confirmed = true;
 						this.close();
 					});
 		new	ButtonComponent(btnContainer)
 			.setButtonText('No')
 			.onClick(() => this.close());
+
+		Object.seal(this);
 	}
 	
 	onOpen(): Promise<void> | void {
-		this.confirmed = false;
+		this.#confirmed = false;
 		return super.onOpen();
 	}
 
 	onClose() {
-		this.responseResolver.resolve(this.confirmed);
+		this.#responseResolver.resolve(this.#confirmed);
 		super.onClose();
 	}
 
 	waitResponse() {
 		super.open();
-		return this.responseResolver.promise;
+		return this.#responseResolver.promise;
 	}
 }
+
+Object.freeze(ConfirmModal.prototype)
+
+export {ConfirmModal}

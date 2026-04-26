@@ -1,7 +1,7 @@
 import {signal, Signal} from "@preact/signals";
 import type { Setting, TextComponent } from "obsidian";
 
-export class PluginSetting<T> {
+class PluginSetting<T> {
     setting: Setting;
     signal:Signal<T>;
 
@@ -22,14 +22,18 @@ export class PluginSetting<T> {
 	
 }
 
+Object.freeze(PluginSetting.prototype)
 
-export class TextPluginSetting extends PluginSetting<string> {
+const PRIVATE_TPS_CTOR = Symbol('private_textpluginsetting_ctor')
+
+class TextPluginSetting extends PluginSetting<string> {
     public readonly text: TextComponent;
 
-    private constructor(setting: Setting, signal: Signal<string>, text: TextComponent) {
+    private constructor(setting: Setting, signal: Signal<string>, text: TextComponent, key?: typeof PRIVATE_TPS_CTOR) {
+        if(key !== PRIVATE_TPS_CTOR) throw("Cannot use private constructor")
         super(setting, signal);
         this.text = text;
-
+        Object.seal(this)
     }
 
     public static build(setting: Setting, name: string, desc: string, value: string) {
@@ -43,6 +47,10 @@ export class TextPluginSetting extends PluginSetting<string> {
                 text.onChange( v => _signal.value = v);
             });
 		
-		return new TextPluginSetting(setting, _signal, _text!);
+		return new TextPluginSetting(setting, _signal, _text!, PRIVATE_TPS_CTOR);
 	}
 }
+
+Object.freeze(TextPluginSetting.prototype)
+
+export {PluginSetting, TextPluginSetting}

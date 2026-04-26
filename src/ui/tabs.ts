@@ -1,37 +1,40 @@
 import { computed, effect, ReadonlySignal, type Signal, signal } from "@preact/signals";
 import "./tabs.css";
 
-export class Tabs {
+class Tabs {
 
-    private options: TabOption[];
-    private rootEl: HTMLDivElement;
+    #options: TabOption[];
+    #rootEl: HTMLDivElement;
     public readonly selectedTabIndex = signal(0);
 
     constructor(){
-        this.options = [];
-        this.rootEl = createDiv({cls: 'rpg-tab-set'});
+        this.#options = [];
+        this.#rootEl = createDiv({cls: 'rpg-tab-set'});
+        Object.seal(this);
     }
     
     addToContainer(containerEl: HTMLElement){        
-        containerEl.appendChild(this.rootEl)
+        containerEl.appendChild(this.#rootEl)
         return this;
     }
 
     addTab(name: string, onClick: () => void){
-        const option = new TabOption(name, this.options.length, this.selectedTabIndex, onClick);
-        this.options.push(option);
-        this.rootEl.appendChild(option.rootEl);
+        const option = new TabOption(name, this.#options.length, this.selectedTabIndex, onClick);
+        this.#options.push(option);
+        this.#rootEl.appendChild(option.rootEl);
         return this;
     }
 }
 
+Object.freeze(Tabs.prototype)
+export {Tabs}
+
 class TabOption {
 
-    private selected:ReadonlySignal<boolean>;
+    #selected:ReadonlySignal<boolean>;
     readonly rootEl: HTMLDivElement;
     name: string;
     onClick: () => void;
-
 
     constructor(
         name: string,
@@ -45,10 +48,10 @@ class TabOption {
         this.rootEl.setText(this.name);
         this.rootEl.className = 'rpg-tab-option';
 
-        this.selected = computed(() => selectedTabIndex.value === index);
+        this.#selected = computed(() => selectedTabIndex.value === index);
 
         effect(() => {
-            if(this.selected.value){
+            if(this.#selected.value){
                 this.rootEl.classList.add('rpg-tab-option-selected')
             } else {
                 this.rootEl.classList.remove('rpg-tab-option-selected')
@@ -59,5 +62,9 @@ class TabOption {
             selectedTabIndex.value = index;
             this.onClick();
         });
+
+        Object.seal(this);
     }
 }
+
+Object.freeze(TabOption.prototype)
