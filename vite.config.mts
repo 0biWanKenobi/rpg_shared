@@ -80,9 +80,9 @@ export default defineConfig(({mode}) => ({
 				"sync/googleDriveTokenCrypto": googleDriveTokenCryptoEntry,
 			},
 			name: "RpgShared",
-			formats: ["es", "cjs"],
-			fileName: (format, entryName) =>
-				format === "es" ? `${entryName}.js` : `${entryName}.cjs`,
+			formats: ["es"],
+			fileName: (_, entryName) =>
+				`${entryName}.js` ,
 		},
 		rollupOptions: {
 			external: [
