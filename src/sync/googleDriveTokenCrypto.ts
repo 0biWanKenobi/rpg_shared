@@ -74,11 +74,11 @@ export function createGoogleDriveSetupContext(authUrl: string): GoogleDriveSetup
 	hashParams.set("setup_key", toBase64Url(crypto.getRandomValues(new Uint8Array(32))));
 	url.hash = hashParams.toString();
 
-	return {
+	return Object.freeze({
 		setupId: hashParams.get("setup_id") as string,
 		setupKey: hashParams.get("setup_key") as string,
 		authUrl: url.toString(),
-	};
+	});
 }
 
 export async function encryptGoogleDriveTokenSet(
@@ -136,5 +136,5 @@ export async function decryptGoogleDriveTokenSet(
 		throw new Error("Decrypted Google Drive payload is incomplete.");
 	}
 
-	return tokenSet as GoogleDriveTokenSet;
+	return Object.freeze(tokenSet) as GoogleDriveTokenSet;
 }
