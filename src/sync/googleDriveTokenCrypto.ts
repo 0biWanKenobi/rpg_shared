@@ -1,3 +1,4 @@
+import { sc_importKey, sc_deriveKey, sc_randUUID, sc_randValues, sc_encrypt, sc_decrypt } from "../crypto";
 import type { GoogleDriveTokenSet } from "./googleDriveAuth";
 
 export type GoogleDriveEncryptedTokenEnvelope = {
@@ -44,10 +45,10 @@ async function deriveEncryptionKey(
 	usages: KeyUsage[],
 ): Promise<CryptoKey> {
 	const keyData = Uint8Array.from(new TextEncoder().encode(password));
-	const baseKey = await crypto.subtle.importKey( "raw", keyData, "PBKDF2", false, ["deriveKey"] );
+	const baseKey = await sc_importKey( "raw", keyData, "PBKDF2", false, ["deriveKey"] );
 
 	const uint8Salt = Uint8Array.from(salt); 
-	return crypto.subtle.deriveKey(
+	return sc_deriveKey(
 		{ name: "PBKDF2", hash: "SHA-256", salt: uint8Salt, iterations },
 		baseKey, keyType, false, usages
 	);
@@ -70,8 +71,8 @@ function isEncryptedTokenEnvelope(
 export function createGoogleDriveSetupContext(authUrl: string): GoogleDriveSetupLaunchContext {
 	const url = new URL(authUrl);
 	const hashParams = new URLSearchParams(url.hash.startsWith("#") ? url.hash.slice(1) : url.hash);
-	hashParams.set("setup_id", crypto.randomUUID());
-	hashParams.set("setup_key", toBase64Url(crypto.getRandomValues(new Uint8Array(32))));
+	hashParams.set("setup_id", sc_randUUID());
+	hashParams.set("setup_key", toBase64Url(sc_randValues(new Uint8Array(32))));
 	url.hash = hashParams.toString();
 
 	return Object.freeze({
@@ -85,11 +86,11 @@ export async function encryptGoogleDriveTokenSet(
 	password: string,
 	tokenSet: GoogleDriveTokenSet,
 ): Promise<string> {
-	const salt = crypto.getRandomValues(new Uint8Array(16));
-	const iv = crypto.getRandomValues(new Uint8Array(12));
+	const salt = sc_randValues(new Uint8Array(16));
+	const iv = sc_randValues(new Uint8Array(12));
 	const key = await deriveEncryptionKey(password, salt, GOOGLE_DRIVE_ENCRYPTION_ITERATIONS, ["encrypt"]);
 	const ciphertext = new Uint8Array(
-		await crypto.subtle.encrypt(
+		await sc_encrypt(
 			{ name: "AES-GCM", iv: Uint8Array.from(iv) },
 			key,
 			Uint8Array.from(new TextEncoder().encode(JSON.stringify(tokenSet)))
@@ -120,7 +121,7 @@ export async function decryptGoogleDriveTokenSet(
 	}
 
 	const key = await deriveEncryptionKey(password, fromBase64Url(envelope.salt), envelope.iterations, ["decrypt"]);
-	const plaintext = await crypto.subtle.decrypt(
+	const plaintext = await sc_decrypt(
 		{ name: "AES-GCM", iv: Uint8Array.from(fromBase64Url(envelope.iv)) },
 		key,
 		Uint8Array.from(fromBase64Url(envelope.ciphertext)),

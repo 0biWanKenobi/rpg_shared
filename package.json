@@ -46,6 +46,11 @@
       "import": "./dist/sync/googleDriveTokenCrypto.js",
       "require": "./dist/sync/googleDriveTokenCrypto.cjs"
     },
+    "./crypto": {
+      "types": "./dist/crypto.d.ts",
+      "import":"./dist/crypto.js",
+      "require": "./dist/crypto.cjs"
+    },
     "./styles.css": "./dist/rpg_shared.css"
   },
   "typesVersions": {
@@ -73,6 +78,9 @@
       ],
       "sync/googleDriveTokenCrypto": [
         "dist/sync/googleDriveTokenCrypto.d.ts"
+      ],
+      "crypto": [
+        "dist/crypto.d.ts"
       ]
     }
   },
