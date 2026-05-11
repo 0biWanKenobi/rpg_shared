@@ -1,4 +1,4 @@
-import { App, ButtonComponent, Modal, Notice, setIcon } from "obsidian";
+import { App, ButtonComponent, Modal, setIcon } from "obsidian";
 import "./googleDriveConnectModal.css";
 
 export type GoogleDeviceAuthorizationView = {
@@ -22,7 +22,7 @@ class GoogleDriveConnectModal extends Modal {
 		Object.seal(this);
 	}
 
-	showDeviceAuthorizationAsync(authUrl: string) {
+	openAsync(authUrl: string) {
 		this.contentEl.empty();
 
 		this.contentEl.createEl("p", {
@@ -51,6 +51,8 @@ class GoogleDriveConnectModal extends Modal {
 				this.#cancelled = true;
 				this.userClose();
 			})
+
+		this.open();
 
 		return this.#wasclosedResolver.promise;
 	}

@@ -21,6 +21,11 @@
       "import": "./dist/ui/confirmModal.js",
       "require": "./dist/ui/confirmModal.cjs"
     },
+    "./sync/googleDriveConnectModal": {
+      "types": "./dist/sync/googleDriveConnectModal.d.ts",
+      "import": "./dist/sync/googleDriveConnectModal.js",
+      "require": "./dist/sync/googleDriveConnectModal.cjs"
+    },
     "./ui/tabs": {
       "types": "./dist/ui/tabs.d.ts",
       "import": "./dist/ui/tabs.js",
@@ -63,6 +68,9 @@
       ],
       "ui/confirmModal": [
         "dist/ui/confirmModal.d.ts"
+      ],
+      "sync/googleDriveConnectModal": [
+        "dist/sync/googleDriveConnectModal.d.ts"
       ],
       "ui/tabs": [
         "dist/ui/tabs.d.ts"

@@ -82,21 +82,36 @@ export function createGoogleDriveSetupContext(authUrl: string): GoogleDriveSetup
 	});
 }
 
+
+export async function encryptText(
+	password: string,
+	text: string,
+	salt_iv?: {
+		salt: Uint8Array<ArrayBuffer>,
+		iv: Uint8Array<ArrayBuffer>
+	}
+) {
+	const salt = salt_iv?.salt ?? sc_randValues(new Uint8Array(16));
+	const iv = salt_iv?.iv ?? sc_randValues(new Uint8Array(12));
+	const key = await deriveEncryptionKey(password, salt, GOOGLE_DRIVE_ENCRYPTION_ITERATIONS, ["encrypt"]);
+	return new Uint8Array(
+		await sc_encrypt(
+			{ name: "AES-GCM", iv: Uint8Array.from(iv) },
+			key,
+			Uint8Array.from(new TextEncoder().encode(text))
+		),
+	);
+}
+
 export async function encryptGoogleDriveTokenSet(
 	password: string,
 	tokenSet: GoogleDriveTokenSet,
 ): Promise<string> {
+
 	const salt = sc_randValues(new Uint8Array(16));
 	const iv = sc_randValues(new Uint8Array(12));
-	const key = await deriveEncryptionKey(password, salt, GOOGLE_DRIVE_ENCRYPTION_ITERATIONS, ["encrypt"]);
-	const ciphertext = new Uint8Array(
-		await sc_encrypt(
-			{ name: "AES-GCM", iv: Uint8Array.from(iv) },
-			key,
-			Uint8Array.from(new TextEncoder().encode(JSON.stringify(tokenSet)))
-		),
-	);
-
+	const ciphertext = await encryptText(password, JSON.stringify(tokenSet), { salt, iv});
+	
 	return toBase64Url(new TextEncoder().encode(JSON.stringify({
 		version: "1",
 		alg: "A256GCM",

@@ -4,6 +4,7 @@ import dts from "unplugin-dts/vite";
 import { defineConfig, type Plugin } from "vite";
 
 
+const cryptoEntry = fileURLToPath(new URL("./src/crypto.ts", import.meta.url));
 const interfacesEntry = fileURLToPath(new URL("./src/settings/interfaces.ts", import.meta.url));
 const pluginEntry = fileURLToPath(new URL("./src/settings/plugin.ts", import.meta.url));
 const confirmModalEntry = fileURLToPath(new URL("./src/ui/confirmModal.ts", import.meta.url));
@@ -12,6 +13,7 @@ const headerWithIconEntry = fileURLToPath(new URL("./src/ui/headerWithIcon.ts", 
 const iconButtonEntry = fileURLToPath(new URL("./src/ui/iconButton.ts", import.meta.url));
 const googleDriveAuthEntry = fileURLToPath(new URL("./src/sync/googleDriveAuth.ts", import.meta.url));
 const googleDriveTokenCryptoEntry = fileURLToPath(new URL("./src/sync/googleDriveTokenCrypto.ts", import.meta.url));
+const googleDriveConnectModalEntry = fileURLToPath(new URL("./src/sync/googleDriveConnectModal.ts", import.meta.url))
 
 function yalcPushOnWatch(): Plugin {
 	let pushInFlight = false;
@@ -70,6 +72,7 @@ export default defineConfig(({mode}) => ({
 		sourcemap: mode == "development" ? "inline": false,
 		lib: {
 			entry: {
+				"crypto": cryptoEntry,
 				"settings/interfaces": interfacesEntry,
 				"settings/plugin": pluginEntry,
 				"ui/confirmModal": confirmModalEntry,
@@ -78,6 +81,7 @@ export default defineConfig(({mode}) => ({
 				"ui/iconButton": iconButtonEntry,
 				"sync/googleDriveAuth": googleDriveAuthEntry,
 				"sync/googleDriveTokenCrypto": googleDriveTokenCryptoEntry,
+				"sync/googleDriveConnectModal": googleDriveConnectModalEntry
 			},
 			name: "RpgShared",
 			formats: ["es"],
