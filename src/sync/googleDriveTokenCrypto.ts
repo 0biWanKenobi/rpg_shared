@@ -1,11 +1,7 @@
 import { sc_importKey, sc_deriveKey, sc_randUUID, sc_randValues, sc_encrypt, sc_decrypt } from "../crypto";
 import type { GoogleDriveTokenSet } from "./googleDriveAuth";
 
-export type GoogleDriveEncryptedTokenEnvelope = {
-	version: "1";
-	alg: "A256GCM";
-	kdf: "PBKDF2-SHA256";
-	iterations: number;
+export type EncryptedTokenEnvelope = {
 	salt: string;
 	iv: string;
 	ciphertext: string;
@@ -26,8 +22,8 @@ function fromBase64Url(value: string): Uint8Array {
 	return Uint8Array.from(binary, (char) => char.charCodeAt(0));
 }
 
-const keyType = Object.freeze({ name: "AES-GCM", length: 256 }) ;
-const GOOGLE_DRIVE_ENCRYPTION_ITERATIONS = 250_000;
+const keyType = Object.freeze({ name: "AES-GCM", length: 256 });
+const ENCRYPTION_ITERATIONS = 250_000;
 
 export type GoogleDriveSetupContext = {
 	setupId: string;
@@ -45,9 +41,9 @@ async function deriveEncryptionKey(
 	usages: KeyUsage[],
 ): Promise<CryptoKey> {
 	const keyData = Uint8Array.from(new TextEncoder().encode(password));
-	const baseKey = await sc_importKey( "raw", keyData, "PBKDF2", false, ["deriveKey"] );
+	const baseKey = await sc_importKey("raw", keyData, "PBKDF2", false, ["deriveKey"]);
 
-	const uint8Salt = Uint8Array.from(salt); 
+	const uint8Salt = Uint8Array.from(salt);
 	return sc_deriveKey(
 		{ name: "PBKDF2", hash: "SHA-256", salt: uint8Salt, iterations },
 		baseKey, keyType, false, usages
@@ -55,13 +51,9 @@ async function deriveEncryptionKey(
 }
 
 function isEncryptedTokenEnvelope(
-	value: Partial<GoogleDriveEncryptedTokenEnvelope>,
-): value is GoogleDriveEncryptedTokenEnvelope {
+	value: Partial<EncryptedTokenEnvelope>,
+): value is EncryptedTokenEnvelope {
 	return (
-		value.version === "1" &&
-		value.alg === "A256GCM" &&
-		value.kdf === "PBKDF2-SHA256" &&
-		typeof value.iterations === "number" &&
 		typeof value.salt === "string" &&
 		typeof value.iv === "string" &&
 		typeof value.ciphertext === "string"
@@ -83,65 +75,49 @@ export function createGoogleDriveSetupContext(authUrl: string): GoogleDriveSetup
 }
 
 
-export async function encryptText(
+async function encryptText(
 	password: string,
-	text: string,
-	salt_iv?: {
-		salt: Uint8Array<ArrayBuffer>,
-		iv: Uint8Array<ArrayBuffer>
-	}
+	text: string
 ) {
-	const salt = salt_iv?.salt ?? sc_randValues(new Uint8Array(16));
-	const iv = salt_iv?.iv ?? sc_randValues(new Uint8Array(12));
-	const key = await deriveEncryptionKey(password, salt, GOOGLE_DRIVE_ENCRYPTION_ITERATIONS, ["encrypt"]);
-	return new Uint8Array(
+	const salt = sc_randValues(new Uint8Array(16));
+	const iv = sc_randValues(new Uint8Array(12));
+	const key = await deriveEncryptionKey(password, salt, ENCRYPTION_ITERATIONS, ["encrypt"]);
+	const ciphertext = new Uint8Array(
 		await sc_encrypt(
 			{ name: "AES-GCM", iv: Uint8Array.from(iv) },
 			key,
 			Uint8Array.from(new TextEncoder().encode(text))
 		),
 	);
+
+	return {
+		salt,
+		iv,
+		ciphertext
+	}
 }
 
-export async function encryptGoogleDriveTokenSet(
+
+export async function encryptObjectToBase64<T>(
 	password: string,
-	tokenSet: GoogleDriveTokenSet,
+	object: T,
 ): Promise<string> {
 
-	const salt = sc_randValues(new Uint8Array(16));
-	const iv = sc_randValues(new Uint8Array(12));
-	const ciphertext = await encryptText(password, JSON.stringify(tokenSet), { salt, iv});
-	
+	const { salt, iv, ciphertext } = await encryptText(password, JSON.stringify(object));
+
 	return toBase64Url(new TextEncoder().encode(JSON.stringify({
-		version: "1",
-		alg: "A256GCM",
-		kdf: "PBKDF2-SHA256",
-		iterations: GOOGLE_DRIVE_ENCRYPTION_ITERATIONS,
 		salt: toBase64Url(salt),
 		iv: toBase64Url(iv),
 		ciphertext: toBase64Url(ciphertext),
-	} satisfies GoogleDriveEncryptedTokenEnvelope)));
+	} satisfies EncryptedTokenEnvelope)));
 }
 
 export async function decryptGoogleDriveTokenSet(
 	password: string,
 	payload: string,
 ): Promise<GoogleDriveTokenSet> {
-	const envelope = JSON.parse(
-		new TextDecoder().decode(fromBase64Url(payload))
-	) as Partial<GoogleDriveEncryptedTokenEnvelope>;
 
-	if (!isEncryptedTokenEnvelope(envelope)) {
-		throw new Error("Invalid encrypted Google Drive payload.");
-	}
-
-	const key = await deriveEncryptionKey(password, fromBase64Url(envelope.salt), envelope.iterations, ["decrypt"]);
-	const plaintext = await sc_decrypt(
-		{ name: "AES-GCM", iv: Uint8Array.from(fromBase64Url(envelope.iv)) },
-		key,
-		Uint8Array.from(fromBase64Url(envelope.ciphertext)),
-	);
-	const tokenSet = JSON.parse(new TextDecoder().decode(plaintext)) as Partial<GoogleDriveTokenSet>;
+	const tokenSet = await decryptObject<Partial<GoogleDriveTokenSet>>(password, payload);
 
 	if (
 		typeof tokenSet.accessToken !== "string" ||
@@ -153,4 +129,25 @@ export async function decryptGoogleDriveTokenSet(
 	}
 
 	return Object.freeze(tokenSet) as GoogleDriveTokenSet;
+}
+
+export async function decryptObject<TEncrypted>(
+	password: string,
+	payload: string,
+): Promise<TEncrypted> {
+	const envelope = JSON.parse(
+		new TextDecoder().decode(fromBase64Url(payload))
+	) as Partial<EncryptedTokenEnvelope>;
+
+	if (!isEncryptedTokenEnvelope(envelope)) {
+		throw new Error("Invalid encrypted Google Drive payload.");
+	}
+
+	const key = await deriveEncryptionKey(password, fromBase64Url(envelope.salt), ENCRYPTION_ITERATIONS, ["decrypt"]);
+	const plaintext = await sc_decrypt(
+		{ name: "AES-GCM", iv: Uint8Array.from(fromBase64Url(envelope.iv)) },
+		key,
+		Uint8Array.from(fromBase64Url(envelope.ciphertext)),
+	);
+	return JSON.parse(new TextDecoder().decode(plaintext)) as TEncrypted;
 }
