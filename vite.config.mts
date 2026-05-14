@@ -15,6 +15,18 @@ const googleDriveAuthEntry = fileURLToPath(new URL("./src/sync/googleDriveAuth.t
 const googleDriveTokenCryptoEntry = fileURLToPath(new URL("./src/sync/googleDriveTokenCrypto.ts", import.meta.url));
 const googleDriveConnectModalEntry = fileURLToPath(new URL("./src/sync/googleDriveConnectModal.ts", import.meta.url))
 
+function resolveYalcBin(): string {
+	if (process.env.YALC_BIN) {
+		return process.env.YALC_BIN;
+	}
+
+	if (process.platform === "win32") {
+		return "yalc.cmd";
+	}
+
+	return process.env.HOME ? `${process.env.HOME}/.local/bin/yalc` : "yalc";
+}
+
 function yalcPushOnWatch(): Plugin {
 	let pushInFlight = false;
 	let pushQueued = false;
@@ -26,15 +38,24 @@ function yalcPushOnWatch(): Plugin {
 		}
 
 		pushInFlight = true;
-		const yalcBin = process.env.YALC_BIN ?? `${process.env.HOME}/.local/bin/yalc`;
+		const yalcBin = resolveYalcBin();
 		console.log("Running yalc push...");
-		const child = spawn(yalcBin, ["push", "--quiet", "--no-workspace-resolve"], {
+		const child = spawn(yalcBin, ["push", "--no-workspace-resolve"], {
+			shell: process.platform === "win32",
 			stdio: ["ignore", "inherit", "inherit"],
+			windowsHide: true,
+		});
+
+		child.on("error", (error) => {
+			pushInFlight = false;
+			console.error(`yalc push failed to start: ${error.message}`);
 		});
 
 		child.on("exit", (code) => {
 			pushInFlight = false;
-			if (code !== 0) {
+			if (code === 0) {
+				console.log("yalc push completed.");
+			} else {
 				console.error(`yalc push exited with code ${code ?? "unknown"}`);
 			}
 

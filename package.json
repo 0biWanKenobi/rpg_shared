@@ -53,7 +53,7 @@
     },
     "./crypto": {
       "types": "./dist/crypto.d.ts",
-      "import":"./dist/crypto.js",
+      "import": "./dist/crypto.js",
       "require": "./dist/crypto.cjs"
     },
     "./styles.css": "./dist/rpg_shared.css"
@@ -97,7 +97,7 @@
   ],
   "scripts": {
     "dev": "vite build --watch --mode development",
-    "dev:yalc": "PUSH_YALC_ON_WATCH=1 npm run dev",
+    "dev:yalc": "cross-env PUSH_YALC_ON_WATCH=1 npm run dev",
     "build": "vite build",
     "yalc:publish": "run-os",
     "yalc:publish:win32": "npm run build && yalc publish --no-workspace-resolve",
@@ -108,6 +108,7 @@
   },
   "devDependencies": {
     "@types/node": "^25.5.0",
+    "cross-env": "^10.1.0",
     "obsidian": "^1.12.3",
     "run-script-os": "^1.1.6",
     "typescript": "^6.0.3",
