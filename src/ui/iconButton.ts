@@ -8,6 +8,8 @@ class IconButtonComponent extends ButtonComponent {
         Object.seal(this)
     }
 
+    clickCallback: (() => void) | undefined = undefined;
+
     addIcon(icon: string): this {
         const iconEl = createDiv({ cls: 'icon' });
         this.buttonEl.prepend(iconEl);
@@ -18,4 +20,4 @@ class IconButtonComponent extends ButtonComponent {
 
 Object.freeze(IconButtonComponent.prototype);
 
-export {IconButtonComponent}
+export { IconButtonComponent }
