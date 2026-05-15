@@ -41,6 +41,11 @@
       "import": "./dist/ui/iconButton.js",
       "require": "./dist/ui/iconButton.cjs"
     },
+    "./ui/userPasswordModal": {
+      "types": "./dist/ui/userPasswordModal.d.ts",
+      "import": "./dist/ui/userPasswordModal.js",
+      "require": "./dist/ui/userPasswordModal.cjs"
+    },
     "./sync/googleDriveAuth": {
       "types": "./dist/sync/googleDriveAuth.d.ts",
       "import": "./dist/sync/googleDriveAuth.js",
@@ -80,6 +85,9 @@
       ],
       "ui/iconButton": [
         "dist/ui/iconButton.d.ts"
+      ],
+      "ui/userPasswordModal": [
+        "dist/ui/userPasswordModal.d.ts"
       ],
       "sync/googleDriveAuth": [
         "dist/sync/googleDriveAuth.d.ts"
