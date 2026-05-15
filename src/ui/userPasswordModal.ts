@@ -1,8 +1,7 @@
-import { App, ButtonComponent, Setting } from "obsidian";
-import { ConfirmModal } from "rpg_shared/ui/confirmModal";
+import { App, ButtonComponent, Modal, Setting } from "obsidian";
 import "./usePasswordModal.css";
 
-class UserPasswordModal extends ConfirmModal {
+class UserPasswordModal extends Modal {
 
     #responseResolver = Promise.withResolvers<string | undefined>();
     #password: string | undefined;
