@@ -5,15 +5,9 @@ import { defineConfig, type Plugin } from "vite";
 
 
 const cryptoEntry = fileURLToPath(new URL("./src/crypto.ts", import.meta.url));
-const interfacesEntry = fileURLToPath(new URL("./src/settings/interfaces.ts", import.meta.url));
-const pluginEntry = fileURLToPath(new URL("./src/settings/plugin.ts", import.meta.url));
-const confirmModalEntry = fileURLToPath(new URL("./src/ui/confirmModal.ts", import.meta.url));
-const tabsEntry = fileURLToPath(new URL("./src/ui/tabs.ts", import.meta.url));
-const headerWithIconEntry = fileURLToPath(new URL("./src/ui/headerWithIcon.ts", import.meta.url));
-const iconButtonEntry = fileURLToPath(new URL("./src/ui/iconButton.ts", import.meta.url));
-const googleDriveAuthEntry = fileURLToPath(new URL("./src/sync/googleDriveAuth.ts", import.meta.url));
-const googleDriveTokenCryptoEntry = fileURLToPath(new URL("./src/sync/googleDriveTokenCrypto.ts", import.meta.url));
-const googleDriveConnectModalEntry = fileURLToPath(new URL("./src/sync/googleDriveConnectModal.ts", import.meta.url))
+const settingsEntry = fileURLToPath(new URL("./src/settings.ts", import.meta.url));
+const uiEntry = fileURLToPath(new URL("./src/ui.ts", import.meta.url));
+const syncEntry = fileURLToPath(new URL("./src/sync.ts", import.meta.url));
 
 function resolveYalcBin(): string {
 	if (process.env.YALC_BIN) {
@@ -92,18 +86,12 @@ export default defineConfig(({mode}) => ({
 	build: {
 		sourcemap: mode == "development" ? "inline": false,
 		lib: {
-			entry: {
-				"crypto": cryptoEntry,
-				"settings/interfaces": interfacesEntry,
-				"settings/plugin": pluginEntry,
-				"ui/confirmModal": confirmModalEntry,
-				"ui/tabs": tabsEntry,
-				"ui/headerWithIcon": headerWithIconEntry,
-				"ui/iconButton": iconButtonEntry,
-				"sync/googleDriveAuth": googleDriveAuthEntry,
-				"sync/googleDriveTokenCrypto": googleDriveTokenCryptoEntry,
-				"sync/googleDriveConnectModal": googleDriveConnectModalEntry
-			},
+				entry: {
+					"crypto": cryptoEntry,
+					"settings": settingsEntry,
+					"ui": uiEntry,
+					"sync": syncEntry
+				},
 			name: "RpgShared",
 			formats: ["es"],
 			fileName: (_, entryName) =>
