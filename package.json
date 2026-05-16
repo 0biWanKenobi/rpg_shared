@@ -6,43 +6,23 @@
   "author": "Obi Wan Kenobi",
   "type": "module",
   "exports": {
-    "./settings": {
-      "types": "./dist/settings.d.ts",
-      "import": "./dist/settings.js",
-      "require": "./dist/settings.cjs"
+    "./settings/*": {
+      "types": "./dist/settings/*.d.ts",
+      "import": "./dist/settings/*.js"
     },
-    "./ui": {
-      "types": "./dist/ui.d.ts",
-      "import": "./dist/ui.js",
-      "require": "./dist/ui.cjs"
+    "./ui/*": {
+      "types": "./dist/ui/*.d.ts",
+      "import": "./dist/ui/*.js"
     },
-    "./sync": {
-      "types": "./dist/sync.d.ts",
-      "import": "./dist/sync.js",
-      "require": "./dist/sync.cjs"
+    "./sync/*": {
+      "types": "./dist/sync/*.d.ts",
+      "import": "./dist/sync/*.js"
     },
     "./crypto": {
       "types": "./dist/crypto.d.ts",
-      "import": "./dist/crypto.js",
-      "require": "./dist/crypto.cjs"
+      "import": "./dist/crypto.js"
     },
     "./styles.css": "./dist/rpg_shared.css"
-  },
-  "typesVersions": {
-    "*": {
-      "settings": [
-        "dist/settings.d.ts"
-      ],
-      "ui": [
-        "dist/ui.d.ts"
-      ],
-      "sync": [
-        "dist/sync.d.ts"
-      ],
-      "crypto": [
-        "dist/crypto.d.ts"
-      ]
-    }
   },
   "files": [
     "dist"

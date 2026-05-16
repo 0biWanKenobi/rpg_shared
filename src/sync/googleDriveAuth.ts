@@ -1,5 +1,4 @@
-import { App, Notice, requestUrl } from "obsidian";
-import { GoogleDriveConnectModal } from "./googleDriveConnectModal";
+import { requestUrl } from "obsidian";
 
 const GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token";
 

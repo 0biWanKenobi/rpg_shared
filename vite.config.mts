@@ -5,9 +5,24 @@ import { defineConfig, type Plugin } from "vite";
 
 
 const cryptoEntry = fileURLToPath(new URL("./src/crypto.ts", import.meta.url));
-const settingsEntry = fileURLToPath(new URL("./src/settings.ts", import.meta.url));
-const uiEntry = fileURLToPath(new URL("./src/ui.ts", import.meta.url));
-const syncEntry = fileURLToPath(new URL("./src/sync.ts", import.meta.url));
+const settingsEntries = ["interfaces", "plugin"].reduce((o, p) => {
+	o["settings/" + p] = fileURLToPath(new URL(`./src/settings/${p}.ts`, import.meta.url));
+	return o;
+}, {} as Record<string, string>)
+
+const syncEntries = ["googleDriveAuth", "googleDriveConnectModal", "googleDriveTokenCrypto"].reduce(
+	(o, p) => {
+		o["sync/" + p] = fileURLToPath(new URL(`./src/sync/${p}.ts`, import.meta.url))
+		return o;
+	}, {} as Record<string, string>
+)
+
+const uiEntries = ["confirmModal", "headerWithIcon", "iconButton", "tabs", "userPasswordModal"].reduce(
+	(o, p) => {
+		o["ui/" + p] = fileURLToPath(new URL(`./src/ui/${p}.ts`, import.meta.url))
+		return o
+	}, {} as Record<string, string>
+)
 
 function resolveYalcBin(): string {
 	if (process.env.YALC_BIN) {
@@ -73,8 +88,7 @@ function yalcPushOnWatch(): Plugin {
 	};
 }
 
-
-export default defineConfig(({mode}) => ({
+export default defineConfig(({ mode }) => ({
 	plugins: [
 		dts({
 			tsconfigPath: "./tsconfig.json",
@@ -84,18 +98,18 @@ export default defineConfig(({mode}) => ({
 		yalcPushOnWatch(),
 	],
 	build: {
-		sourcemap: mode == "development" ? "inline": false,
+		sourcemap: mode == "development" ? "inline" : false,
 		lib: {
-				entry: {
-					"crypto": cryptoEntry,
-					"settings": settingsEntry,
-					"ui": uiEntry,
-					"sync": syncEntry
-				},
+			entry: {
+				"crypto": cryptoEntry,
+				...syncEntries,
+				...settingsEntries,
+				...uiEntries,
+			},
 			name: "RpgShared",
 			formats: ["es"],
 			fileName: (_, entryName) =>
-				`${entryName}.js` ,
+				`${entryName}.js`,
 		},
 		rollupOptions: {
 			external: [
