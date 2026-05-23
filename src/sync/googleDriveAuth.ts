@@ -31,7 +31,7 @@ export type GoogleDriveTokenSet = {
 export async function refreshGoogleDriveAccessToken(
 	baseUrl: string,
 	refreshToken: string,
-) {
+): Promise<GoogleRefreshResponse> {
 
 	if (!refreshToken) {
 		throw new Error("No Google Drive refresh token is available.");
@@ -48,5 +48,16 @@ export async function refreshGoogleDriveAccessToken(
 		}),
 	});
 
-	return await response.json() as GoogleRefreshResponse;
+	const tokenSet = await response.json() as GoogleRefreshResponse;
+
+	if (tokenSet.success && (!("access_token" in tokenSet) || !("expiresAt" in tokenSet))) {
+		return {
+			success: false,
+			error: "Missing token or expiration in response",
+			access_token: undefined,
+			expiresAt: undefined
+		}
+	}
+
+	return tokenSet;
 }
