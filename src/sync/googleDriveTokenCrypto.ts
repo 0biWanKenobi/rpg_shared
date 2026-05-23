@@ -12,7 +12,7 @@ function toBase64Url(bytes: Uint8Array): string {
 	return base64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/u, "");
 }
 
-function fromBase64Url(value: string): Uint8Array {
+function fromBase64Url(value: string): Uint8Array<ArrayBuffer> {
 	const padding = (4 - (value.length % 4)) % 4;
 	const normalized = value
 		.replace(/-/g, "+")
@@ -145,9 +145,9 @@ export async function decryptObject<TEncrypted>(
 
 	const key = await deriveEncryptionKey(password, fromBase64Url(envelope.salt), ENCRYPTION_ITERATIONS, ["decrypt"]);
 	const plaintext = await sc_decrypt(
-		{ name: "AES-GCM", iv: Uint8Array.from(fromBase64Url(envelope.iv)) },
+		{ name: "AES-GCM", iv: fromBase64Url(envelope.iv) },
 		key,
-		Uint8Array.from(fromBase64Url(envelope.ciphertext)),
+		fromBase64Url(envelope.ciphertext),
 	);
 	return JSON.parse(new TextDecoder().decode(plaintext)) as TEncrypted;
 }
