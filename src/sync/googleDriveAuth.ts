@@ -10,6 +10,18 @@ type GoogleTokenSuccessResponse = {
 	token_type: string;
 };
 
+type GoogleRefreshResponse = {
+	success: true
+	access_token: string,
+	expiresAt: number,
+	error: undefined
+} | {
+	success: false,
+	access_token: undefined,
+	expiresAt: undefined,
+	error: string,
+}
+
 export type GoogleDriveTokenSet = {
 	accessToken: string;
 	refreshToken?: string;
@@ -18,9 +30,8 @@ export type GoogleDriveTokenSet = {
 	expiresAt: number;
 };
 
-const formBody = (params: Record<string, string>) => new URLSearchParams(params).toString();
-
 export async function refreshGoogleDriveAccessToken(
+	baseUrl: string,
 	refreshToken: string,
 ) {
 
@@ -28,22 +39,16 @@ export async function refreshGoogleDriveAccessToken(
 		throw new Error("No Google Drive refresh token is available.");
 	}
 
-	const response = await requestUrl({
-		url: GOOGLE_TOKEN_URL,
+	const response = await fetch(`${baseUrl}oauthRefresh`, {
 		method: "POST",
-		contentType: "application/x-www-form-urlencoded",
-		body: formBody({
+		headers: {
+			"Content-Type": "application/json"
+		},
+		body: JSON.stringify({
 			refresh_token: refreshToken,
 			grant_type: "refresh_token",
 		}),
 	});
 
-	const token = response.json as GoogleTokenSuccessResponse;
-	return {
-		accessToken: token.access_token,
-		refreshToken,
-		tokenType: token.token_type,
-		scope: token.scope,
-		expiresAt: Date.now() + token.expires_in * 1000,
-	} satisfies GoogleDriveTokenSet;
+	return await response.json() as GoogleRefreshResponse;
 }
