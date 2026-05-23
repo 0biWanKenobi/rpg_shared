@@ -25,8 +25,6 @@ type GoogleRefreshResponse = {
 export type GoogleDriveTokenSet = {
 	accessToken: string;
 	refreshToken?: string;
-	tokenType: string;
-	scope: string;
 	expiresAt: number;
 };
 

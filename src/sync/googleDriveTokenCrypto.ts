@@ -121,8 +121,6 @@ export async function decryptGoogleDriveTokenSet(
 
 	if (
 		typeof tokenSet.accessToken !== "string" ||
-		typeof tokenSet.tokenType !== "string" ||
-		typeof tokenSet.scope !== "string" ||
 		typeof tokenSet.expiresAt !== "number"
 	) {
 		throw new Error("Decrypted Google Drive payload is incomplete.");
