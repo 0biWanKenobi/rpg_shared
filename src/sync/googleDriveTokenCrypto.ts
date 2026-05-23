@@ -142,10 +142,15 @@ export async function decryptObject<TEncrypted>(
 	}
 
 	const key = await deriveEncryptionKey(password, fromBase64Url(envelope.salt), ENCRYPTION_ITERATIONS, ["decrypt"]);
-	const plaintext = await sc_decrypt(
+	const plaintextBuffer = await sc_decrypt(
 		{ name: "AES-GCM", iv: fromBase64Url(envelope.iv) },
 		key,
 		fromBase64Url(envelope.ciphertext),
 	);
-	return JSON.parse(new TextDecoder().decode(plaintext)) as TEncrypted;
+
+	const plainText = new TextDecoder().decode(plaintextBuffer);
+	if (!plainText) {
+		throw new Error("Decrypted stringified contents are empty")
+	}
+	return JSON.parse(plainText) as TEncrypted;
 }
