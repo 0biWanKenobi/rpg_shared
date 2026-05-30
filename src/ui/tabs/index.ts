@@ -5,11 +5,15 @@ class Tabs {
 
     #options: TabOption[];
     #rootEl: HTMLDivElement;
+    #tabHeaders: HTMLDivElement
+    #tabsContainer: HTMLDivElement
     public readonly selectedTabIndex = signal(0);
 
     constructor(){
         this.#options = [];
-        this.#rootEl = createDiv({cls: 'rpg-tab-set'});
+        this.#rootEl = createDiv({cls: 'rpg-tab-component'});
+        this.#tabHeaders = this.#rootEl.createDiv({cls: 'rpg-tab-set'})
+        this.#tabsContainer = this.#rootEl.createDiv({cls: 'rpg-tab-container'})
         Object.seal(this);
     }
     
@@ -18,10 +22,22 @@ class Tabs {
         return this;
     }
 
-    addTab(name: string, onClick: () => void){
+    addTab(name: string, builder: (container: HTMLElement) => void){
+        const tabIndex = this.#options.length;
+        const onClick = () => {
+            this.selectedTabIndex.value = tabIndex;
+            for (const tabContent of this.#tabsContainer.children) {
+                tabContent.addClass('hidden')
+            }
+            tab.removeClass('hidden');
+        }
+        const tab = this.#tabsContainer.createDiv({cls: `rpg-tab rpg-tab-${tabIndex}`})
+        if(tabIndex > 0) tab.addClass('hidden')
+        builder(tab);
+        
         const option = new TabOption(name, this.#options.length, this.selectedTabIndex, onClick);
         this.#options.push(option);
-        this.#rootEl.appendChild(option.rootEl);
+        this.#tabHeaders.appendChild(option.rootEl);
         return this;
     }
 }
