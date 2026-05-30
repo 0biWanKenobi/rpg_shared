@@ -18,7 +18,7 @@ class GoogleDriveConnectModal extends Modal {
 	constructor(app: App) {
 		super(app);
 		this.modalEl.addClass("gdrive-connect-modal");
-		this.setTitle("Connect Google Drive");
+		this.setTitle("Connect");
 		Object.seal(this);
 	}
 
