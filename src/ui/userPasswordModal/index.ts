@@ -17,6 +17,11 @@ class UserPasswordModal extends Modal {
                 t.onChange(v => {
                     this.#password = v
                 })
+                t.inputEl.addEventListener("keypress", (e) => {
+                    if(e.key != "Enter") return;
+                    e.preventDefault();
+                    this.close();
+                })
             })
 
         const btnContainer = this.contentEl.createEl('div', { cls: 'confirm-modal-buttons' })

@@ -17,7 +17,7 @@ const syncEntries = ["googleDriveAuth", "googleDriveConnectModal", "googleDriveT
 	}, {} as Record<string, string>
 )
 
-const uiEntries = ["confirmModal", "headerWithIcon", "iconButton", "tabs", "userPasswordModal", "driveFolder/index"].reduce(
+const uiEntries = ["confirmModal", "headerWithIcon", "iconButton", "tabs", "userPasswordModal/index", "driveFolder/index"].reduce(
 	(o, p) => {
 		o["ui/" + p] = fileURLToPath(new URL(`./src/ui/${p}.ts`, import.meta.url))
 		return o
