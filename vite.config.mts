@@ -4,25 +4,17 @@ import dts from "unplugin-dts/vite";
 import { defineConfig, type Plugin } from "vite";
 
 
-const cryptoEntry = fileURLToPath(new URL("./src/crypto.ts", import.meta.url));
-const settingsEntries = ["interfaces", "plugin"].reduce((o, p) => {
-	o["settings/" + p] = fileURLToPath(new URL(`./src/settings/${p}.ts`, import.meta.url));
-	return o;
-}, {} as Record<string, string>)
-
-const syncEntries = ["googleDriveAuth", "googleDriveConnectModal", "googleDriveTokenCrypto"].reduce(
-	(o, p) => {
-		o["sync/" + p] = fileURLToPath(new URL(`./src/sync/${p}.ts`, import.meta.url))
+function generateEntries(root: string, paths: string[]) {
+	return paths.reduce<Record<string, string>>((o, p) => {
+		o[root+"/"+p] = fileURLToPath(new URL(`./src/${root}/${p}.ts`, import.meta.url))
 		return o;
-	}, {} as Record<string, string>
-)
+	}, {})
+}
 
-const uiEntries = ["confirmModal", "headerWithIcon", "iconButton", "tabs", "userPasswordModal/index", "driveFolder/index"].reduce(
-	(o, p) => {
-		o["ui/" + p] = fileURLToPath(new URL(`./src/ui/${p}.ts`, import.meta.url))
-		return o
-	}, {} as Record<string, string>
-)
+const cryptoEntry = fileURLToPath(new URL("./src/crypto.ts", import.meta.url));
+const settingsEntries = generateEntries("settings", ["interfaces", "plugin"])
+const syncEntries =generateEntries("sync", ["googleDriveAuth", "googleDriveConnectModal", "googleDriveTokenCrypto"]);
+const uiEntries = generateEntries("ui", ["confirmModal/index", "headerWithIcon/index", "iconButton/index", "tabs/index", "userPasswordModal/index", "driveFolder/index"]);
 
 function resolveYalcBin(): string {
 	if (process.env.YALC_BIN) {
