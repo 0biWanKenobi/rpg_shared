@@ -1,15 +1,3 @@
-import { requestUrl } from "obsidian";
-
-const GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token";
-
-type GoogleTokenSuccessResponse = {
-	access_token: string;
-	refresh_token?: string;
-	expires_in: number;
-	scope: string;
-	token_type: string;
-};
-
 type GoogleRefreshResponse = {
 	success: true
 	access_token: string,
