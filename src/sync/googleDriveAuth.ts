@@ -34,7 +34,19 @@ export async function refreshGoogleDriveAccessToken(
 			refresh_token: refreshToken,
 			grant_type: "refresh_token",
 		}),
+	})
+	.catch( err => {
+		console.debug("Cannot refresh Drive token", err);
 	});
+
+	if(!response){
+		return {
+			success: false,
+			error: "Connection with Google API failed",
+			access_token: undefined,
+			expiresAt: undefined
+		}
+	}
 
 	const tokenSet = await response.json() as GoogleRefreshResponse;
 
