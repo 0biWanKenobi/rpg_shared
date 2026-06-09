@@ -14,7 +14,7 @@
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
     "useUnknownInCatchVariables": true,
-    "types": ["node", "vite/client"],
+    "types": ["node", "svelte", "vite/client"],
     "lib": [
       "ES2020",
       "DOM",
@@ -23,6 +23,7 @@
   },
   "include": [
     "src/**/*.ts", 
+    "src/**/*.svelte",
     "./**/*.d.ts"
   ]
 }
