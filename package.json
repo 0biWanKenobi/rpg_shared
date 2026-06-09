@@ -12,6 +12,7 @@
     },
     "./ui/*": {
       "types": "./dist/ui/*/index.d.ts",
+      "svelte": "./dist/ui/*/index.js",
       "import": "./dist/ui/*/index.js"
     },
     "./sync/*": {
@@ -31,6 +32,7 @@
     "dev": "vite build --watch --mode development",
     "dev:debug": "vite build --mode development --debug ",
     "dev:yalc": "cross-env PUSH_YALC_ON_WATCH=1 npm run dev",
+    "build:types:svelte": "svelte-package -i src -o dist -p --tsconfig ./tsconfig.json",
     "build": "vite build",
     "test": "vitest run --config vitest.config.mts",
     "yalc:publish": "run-os",
@@ -41,14 +43,21 @@
     "yalc:push:linux:darwin": "npm run build && ${YALC_BIN:-$HOME/.local/bin/yalc} push --no-workspace-resolve"
   },
   "devDependencies": {
+    "@jsrob/svelte-portal": "^0.2.1",
+    "@sveltejs/package": "^2.5.8",
+    "@sveltejs/vite-plugin-svelte": "^7.1.2",
     "@types/node": "^25.5.0",
     "cross-env": "^10.1.0",
     "obsidian": "^1.12.3",
     "run-script-os": "^1.1.6",
+    "svelte": "^5.56.3",
     "typescript": "^6.0.3",
-    "unplugin-dts": "^1.0.0-beta.6",
-    "vite": "^6.2.0",
+    "vite": "^8.0.16",
+    "vite-plugin-dts": "^5.0.2",
     "vitest": "^3.2.4"
+  },
+  "peerDependencies": {
+    "svelte": "^5.56.3"
   },
   "dependencies": {
     "@preact/signals": "^2.8.2"
