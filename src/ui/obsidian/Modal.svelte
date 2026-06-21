@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Portal } from "@jsrob/svelte-portal";
 	import Icon from "../base/Icon.svelte";
+    import Box from "../base/Box.svelte";
 
 	type Props = {
 		title?: string;
@@ -29,11 +30,11 @@
 
 <Portal target={portalTarget ?? document.body}>
 	{#if open}
-		<div class={className + " modal-container mod-dim"}>
+		<Box class={className + " modal-container mod-dim"} onClick={closeModal}>
 			<div class="modal-bg" style="opacity: 0.85;"></div>
-			<div class="modal">
+			<Box class="modal" onClick={e => e.stopPropagation()}>
 				<div class="modal-close-button mod-raised clickable-icon">
-					<span role="button" tabindex="0" onkeypress={null} onclick={closeModal} style="display: contents;">
+					<span role="button" tabindex="0" onkeypress={null} onclick={() => closeModal()} style="display: contents;">
 						<Icon icon="x" />
 					</span>
 				</div>
@@ -43,7 +44,7 @@
 				<div class="modal-content">
 					{@render children?.()}
 				</div>
-			</div>
-		</div>
+			</Box>
+		</Box>
 	{/if}
 </Portal>

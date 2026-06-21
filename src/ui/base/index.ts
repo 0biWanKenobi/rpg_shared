@@ -14,6 +14,7 @@ import StateButton from "./StateButton.svelte";
 import ToggleButton from "./ToggleButton.svelte";
 import ValidateInput from "./ValidateInput.svelte";
 import VirtualList from "./VirtualList.svelte";
+import Box from "./Box.svelte"
 
 export {
 	Button,
@@ -29,4 +30,5 @@ export {
 	ToggleButton,
 	ValidateInput,
 	VirtualList,
+	Box,
 };

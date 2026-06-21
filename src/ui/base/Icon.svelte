@@ -10,40 +10,38 @@
 
     let {icon = "", size = null, stroke_width = null, class: className = "", ...rest}: Props = $props();
 
-    let icon_element: SVGElement | null = $state(null);
-
-    $effect(() => {
-        if (!icon.startsWith("<svg")) icon_element = getIcon(icon);
-        else
-            icon_element = <SVGElement>(
-                new DOMParser().parseFromString(icon, "text/html").body.childNodes[0]
-            );
-
-        if (className) icon_element!.classList.add(...className.split(" "));
-    });
-
-    $effect(() => {
-        if (!(icon_element && size))
-            return;
+    const icon_element: SVGElement | null = $derived.by(() => {
+        const result = !icon.startsWith("<svg")
+            ? getIcon(icon)
+            : <SVGElement>(
+                    new DOMParser().parseFromString(icon, "text/html").body.childNodes[0]
+                );
         
-        if (typeof size === "number") {
-            icon_element.style.width = size + "px";
-            icon_element.style.height = size + "px";
-        } else if (Array.isArray(size)) {
-            icon_element.style.width = size[0] + "px";
-            icon_element.style.height = size[1] + "px";
-        } else {
-            icon_element.style.width = `var(--${size})`;
-            icon_element.style.height = `var(--${size})`;
-        }
-    
-    });
+        if(!result) return result;
 
-    $effect(() => {
-        if (icon_element && stroke_width) {
-            icon_element.style.strokeWidth = stroke_width + "px";
+        if (className) result.classList.add(...className.split(" "));
+
+
+        if(stroke_width)
+            result.style.strokeWidth = stroke_width + "px";
+
+        if(!size)
+            return result;
+
+
+        if (typeof size === "number") {
+            result.style.width = size + "px";
+            result.style.height = size + "px";
+        } else if (Array.isArray(size)) {
+            result.style.width = size[0] + "px";
+            result.style.height = size[1] + "px";
+        } else {
+            result.style.width = `var(--${size})`;
+            result.style.height = `var(--${size})`;
         }
-    });
+
+        return result;
+    })
 
 </script>
 
