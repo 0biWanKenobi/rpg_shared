@@ -36,7 +36,7 @@
 </script>
 
 <button
-  class={className + (icon ? "icon-button": "") + (warning ? " mod-warning" : "") + (cta? " mod-cta" : "")}
+  class={className + (icon ? " icon-button": "") + (warning ? " mod-warning" : "") + (cta? " mod-cta" : "")}
   class:svelcomlib-icon-text={icon}
   aria-label={tooltip}
   onclick={onClick}

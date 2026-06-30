@@ -67,13 +67,13 @@
                         <br/>
                     {/if}
                     <span
-                            class={"svelcomlib-notice " + (notice.style ?? "")}
-                            class:svelcomlib-notice-info={notice.type === "info"}
-                            class:svelcomlib-notice-warning={notice.type === "warning"}
-                            class:svelcomlib-notice-error={notice.type === "error"}
+                        class={"svelcomlib-notice " + (notice.style ?? "")}
+                        class:svelcomlib-notice-info={notice.type === "info"}
+                        class:svelcomlib-notice-warning={notice.type === "warning"}
+                        class:svelcomlib-notice-error={notice.type === "error"}
                     >
-            {@html notice.text}
-          </span>
+                        {@html notice.text}
+                    </span>
                 {/if}
             {/each}
         </div>

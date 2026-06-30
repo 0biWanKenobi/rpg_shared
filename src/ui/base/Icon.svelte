@@ -1,48 +1,100 @@
 <script lang="ts">
-    import {getIcon} from "obsidian";
+    import { getIcon } from "obsidian";
+    import { onMount } from "svelte";
 
-    interface Props {
+    type Props = {
         icon?: string;
         size?: number | [number, number] | string | null;
         stroke_width?: number | null;
         class?: string;
-    }
+    } & Record<string, unknown>;
 
-    let {icon = "", size = null, stroke_width = null, class: className = "", ...rest}: Props = $props();
+    type ParsedIcon = {
+        inner: string;
+        attrs: Record<string, string>;
+        class: DOMTokenList
+    };
 
-    const icon_element: SVGElement | null = $derived.by(() => {
-        const result = !icon.startsWith("<svg")
-            ? getIcon(icon)
-            : <SVGElement>(
-                    new DOMParser().parseFromString(icon, "text/html").body.childNodes[0]
-                );
-        
-        if(!result) return result;
+    let {
+        icon = "",
+        size = null,
+        stroke_width = null,
+        class: className = "",
+        ...rest
+    }: Props = $props();
 
-        if (className) result.classList.add(...className.split(" "));
-
-
-        if(stroke_width)
-            result.style.strokeWidth = stroke_width + "px";
-
-        if(!size)
-            return result;
-
-
-        if (typeof size === "number") {
-            result.style.width = size + "px";
-            result.style.height = size + "px";
-        } else if (Array.isArray(size)) {
-            result.style.width = size[0] + "px";
-            result.style.height = size[1] + "px";
-        } else {
-            result.style.width = `var(--${size})`;
-            result.style.height = `var(--${size})`;
+    onMount(() => {
+        (SVGElement.prototype as any).isShown = function(){
+            return !!this.parentNode.offsetParent
         }
-
-        return result;
     })
 
+    function parseIcon(icon: string): ParsedIcon {
+        const svg = !icon.startsWith("<svg")
+            ? getIcon(icon)
+            :<SVGElement>(
+                    new DOMParser().parseFromString(icon, "text/html").body.childNodes[0]
+                );
+
+        if (!svg) throw Error("Cannot load icon")
+
+        const attrs: Record<string, string> = {};
+
+        for (const name of svg.getAttributeNames()) {
+            const value = svg.getAttribute(name);
+            if (value != null) attrs[name] = value;
+        }
+
+        return {
+            inner: svg.innerHTML,
+            attrs,
+            class: svg.classList
+        };
+    }
+
+    function getSizeStyles(size: Props["size"]) {
+        if (!size) return {};
+
+        if (typeof size === "number") {
+            return { width: `${size}px`, height: `${size}px` };
+        }
+
+        if (Array.isArray(size)) {
+            return { width: `${size[0]}px`, height: `${size[1]}px` };
+        }
+
+        return {
+            width: `var(--${size})`,
+            height: `var(--${size})`,
+        };
+    }
+
+    const parsed = $derived(parseIcon(icon));
+
+    const svgAttrs = $derived.by(() => {
+        const base = parsed.attrs ?? {};
+
+        const styleMap = {
+            ...getSizeStyles(size),
+            ...(stroke_width ? { "stroke-width": `${stroke_width}px` } : {}),
+        };
+
+        const style = Object.entries(styleMap)
+            .map(([key, value]) => `${key}: ${value}`)
+            .join("; ");
+
+        
+        if(className) parsed.class.add(...className.split(" "));
+        return {
+            xmlns: "http://www.w3.org/2000/svg",
+            ...base,
+            ...(className ? { class: parsed.class.toString() } : {}),
+            ...(style ? { style } : {}),
+        };
+    });
 </script>
 
-{@html icon_element?.outerHTML ?? ""}
+
+<svg {...svgAttrs} {...rest}>
+    {@html parsed.inner }
+</svg>
