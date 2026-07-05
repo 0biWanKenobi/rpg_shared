@@ -1,0 +1,25 @@
+name: Node.js CI
+
+on:
+  push:
+    tags:
+      - "release*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    container:
+      image: node:18-alpine
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build --if-present
+
+      - name: Test
+        run: npm test
