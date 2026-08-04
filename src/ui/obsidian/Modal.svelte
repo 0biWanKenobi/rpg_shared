@@ -25,6 +25,8 @@
 		onClose?.()
 	};
 
+	// support for Settings opening in separate window from Obsidian 1.13 onwards
+	const document = globalThis.activeWindow?.activeDocument ?? globalThis.document;
     const portalTarget = document.querySelector(".modal.mod-settings")?.parentElement!
 </script>
 
