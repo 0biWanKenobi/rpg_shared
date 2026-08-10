@@ -7,7 +7,7 @@
     value?: string;
     placeholder?: string;
     onChange?: (value: string) => void;
-    onEnter?: () => void;
+    onEnter?: (e: KeyboardEvent) => void;
     valid?: boolean;
     readonly?: boolean;
     class?: string;
@@ -38,7 +38,7 @@
   oninput={e => onChange(e.currentTarget.value)}
   onkeydown={e => {
     if(e.key != "Enter") return;
-    onEnter();
+    onEnter(e);
   }}
   class={className}
   class:svelcomlib-input-success={valid}
