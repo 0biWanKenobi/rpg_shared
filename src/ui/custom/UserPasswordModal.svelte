@@ -10,46 +10,56 @@
     type Props = {
         title: string,
         open: boolean,
+        onReturn?: (v:string|undefined) => void,
+        onCancel?: () => void
     }
 
-    let {title, open = $bindable(false)}: Props = $props();
+    let {title, open = $bindable(false), onReturn, onCancel}: Props = $props();
 
     let inputValue = $state<string | undefined>('')
 
-    const {promise, resolve} = Promise.withResolvers<string|undefined>()
 
-    export async function onReturn(){
-        return promise;
-    }
 
     onMount(() => {
-        return () => resolve(undefined)
+        return () => onReturn?.(inputValue);
     })
 
-    const onConfirm = () => {
+    const onConfirm = (e: MouseEvent | KeyboardEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
         if(!inputValue) return;
-        resolve(inputValue);
+        onReturn?.(inputValue);
         inputValue = undefined;
     }
+
+    const okBtnDisabled = $derived(!inputValue || inputValue.length == 0);
+    const btnTooltip = $derived(!inputValue || inputValue.length == 0 ? "Please provide a password" : "");
 
 </script>
 
 
-<Modal bind:open onClose={() => {
-    resolve(inputValue);
-    inputValue = undefined;
-}}>
+<Modal
+    bind:open
+     onClose={() => {
+        onReturn?.(inputValue);
+        inputValue = undefined;
+    }}
+    onCancel={() => {
+        onCancel?.();
+        inputValue = undefined;
+    }}
+>
     <form class="pwd_form">
         <SettingItemGroup>
             <SettingItem name={title}>
-                <Input type="password" onChange={v => inputValue=v} onEnter={onConfirm}/>
+                <Input type="password" onChange={v => inputValue=v} onEnter={e => onConfirm(e)}/>
             </SettingItem>
             <SettingItem>
                 <div class="confirm-modal-buttons">
-                    <Button cta text="Ok" onClick={onConfirm}/>
+                    <Button cta text="Ok" onClick={e => onConfirm(e)} disabled={okBtnDisabled} tooltip={btnTooltip}/>
                     <Button text="Cancel" onClick={() => {
                         inputValue = undefined;
-                        resolve(inputValue)
+                        onCancel?.();
                     }}/>
                 </div>
             </SettingItem>

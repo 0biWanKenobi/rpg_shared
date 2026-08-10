@@ -10,6 +10,7 @@
 		open?: boolean;
 		class?: string
 		onClose?: () => void
+		onCancel?: () => void
 	};
 
 	let {
@@ -17,12 +18,18 @@
 		children,
 		open = $bindable(false),
 		class: className = "",
-		onClose
+		onClose,
+		onCancel
 	}: Props = $props();
 
 	const closeModal = () => {
 		open = false;
 		onClose?.()
+	};
+
+	const closeModalWithCancel = () => {
+		open = false;
+		onCancel?.()
 	};
 
 	// support for Settings opening in separate window from Obsidian 1.13 onwards
@@ -36,7 +43,7 @@
 			<div class="modal-bg" style="opacity: 0.85;"></div>
 			<Box class="modal" onClick={e => e.stopPropagation()}>
 				<div class="modal-close-button mod-raised clickable-icon">
-					<span role="button" tabindex="0" onkeypress={null} onclick={() => closeModal()} style="display: contents;">
+					<span role="button" tabindex="0" onkeypress={null} onclick={() => closeModalWithCancel()} style="display: contents;">
 						<Icon icon="x" />
 					</span>
 				</div>
