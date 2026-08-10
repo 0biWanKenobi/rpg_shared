@@ -44,6 +44,8 @@
             s += " svelcomlib-setting-" + "sub".repeat(depth) + "heading";
         return s;
     })
+
+    const centerClass = $derived(!description && notices.length === 0);
 </script>
 
 <div
@@ -52,6 +54,7 @@
     class:mod-toggle={type === "toggle"}
     class:mod-slider={type === "slider"}
     class:setting-item-heading={type === "heading"}
+    class:setting-item-center={centerClass}
 >
     <div class="setting-item-info">
         <div class="setting-item-name">
@@ -60,8 +63,7 @@
             </div>
         </div>
         <div class="setting-item-description">
-            {@html description}
-            {#each notices as notice, idx}
+            {@html description}{#each notices as notice, idx}
                 {#if notice}
                     {#if description || idx !== 0}
                         <br/>
@@ -85,3 +87,9 @@
 {#if subcontrol}
     {@render subcontrol()}
 {/if}
+
+<style>
+.setting-item.setting-item-center {
+    align-items: center;
+}
+</style>
