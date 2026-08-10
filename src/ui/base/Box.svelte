@@ -32,7 +32,14 @@
 		event.key === "Enter" || event.key === " ";
 
 	function handleKeyDown(event: KeyboardEvent) {
-		if (!onClick || interactiveElements.has(as) || !isKeyboardClickable(event)) return;
+		if (
+        !onClick ||
+        interactiveElements.has(as) ||
+        event.target !== event.currentTarget ||
+        !isKeyboardClickable(event)
+    ) {
+        return;
+    }
 
 		event.preventDefault();
 		onClick(event as unknown as MouseEvent);
