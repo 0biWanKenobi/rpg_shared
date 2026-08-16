@@ -1,6 +1,13 @@
 {
-  "name": "rpg_shared",
-  "version": "1.0.0",
+  "name": "@0biwankenobi/rpg-shared",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/0biWanKenobi/rpg_shared.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "version": "0.0.6",
   "description": "Shared lib for `rpg_master_plugin` and `rpg_player_plugin`",
   "license": "ISC",
   "author": "Obi Wan Kenobi",
@@ -23,7 +30,7 @@
       "types": "./dist/crypto.d.ts",
       "import": "./dist/crypto.js"
     },
-    "./styles.css": "./dist/rpg_shared.css"
+    "./styles.css": "./dist/rpg-shared.css"
   },
   "files": [
     "dist"
