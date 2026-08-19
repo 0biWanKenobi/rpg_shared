@@ -18,7 +18,10 @@ type CreateFolderResponse = {
 export async function createFolder(
   accessToken: string,
   folderName: string,
-  parentFolderId?: string
+  config: {
+	  parentFolderId?: string
+	  properties?: Record<string, any>
+  } = {}
 ): Promise<CreateFolderResponse> {
   const response = await fetch(
     "https://www.googleapis.com/drive/v3/files?fields=id,name,mimeType,parents",
@@ -31,9 +34,10 @@ export async function createFolder(
       body: JSON.stringify({
         name: folderName,
         mimeType: "application/vnd.google-apps.folder",
-        ...(parentFolderId && {
-          parents: [parentFolderId],
+        ...(config.parentFolderId && {
+          parents: [config.parentFolderId],
         }),
+		appProperties: config.properties
       }),
     }
   ).catch( err => {
