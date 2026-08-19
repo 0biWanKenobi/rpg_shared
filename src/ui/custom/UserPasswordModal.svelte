@@ -18,15 +18,16 @@
 
     let inputValue = $state<string | undefined>('')
 
-
+    let shouldReturn = true;
 
     onMount(() => {
-        return () => onReturn?.(inputValue);
+        return () => shouldReturn && onReturn?.(inputValue);
     })
 
     const onConfirm = (e: MouseEvent | KeyboardEvent) => {
         e.preventDefault();
         e.stopPropagation();
+        shouldReturn = false;
         if(!inputValue) return;
         onReturn?.(inputValue);
         inputValue = undefined;
@@ -41,12 +42,14 @@
 <Modal
     bind:open
      onClose={() => {
+         inputValue = undefined;
+         shouldReturn = false;
         onReturn?.(inputValue);
-        inputValue = undefined;
     }}
     onCancel={() => {
-        onCancel?.();
         inputValue = undefined;
+        shouldReturn = false;
+        onCancel?.();
     }}
 >
     <form class="pwd_form">
@@ -59,6 +62,7 @@
                     <Button cta text="Ok" onClick={e => onConfirm(e)} disabled={okBtnDisabled} tooltip={btnTooltip}/>
                     <Button text="Cancel" onClick={() => {
                         inputValue = undefined;
+                        shouldReturn = false;
                         onCancel?.();
                     }}/>
                 </div>
