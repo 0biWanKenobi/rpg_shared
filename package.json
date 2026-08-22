@@ -7,7 +7,7 @@
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
   },
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Shared lib for `rpg_master_plugin` and `rpg_player_plugin`",
   "license": "ISC",
   "author": "Obi Wan Kenobi",

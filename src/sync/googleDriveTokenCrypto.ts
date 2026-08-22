@@ -23,7 +23,7 @@ function fromBase64Url(value: string): Uint8Array<ArrayBuffer> {
 }
 
 const keyType = Object.freeze({ name: "AES-GCM", length: 256 });
-const ENCRYPTION_ITERATIONS = 250_000;
+const ENCRYPTION_ITERATIONS = 100_000; // google auth says it does not support more than that
 
 export type GoogleDriveSetupContext = {
 	setupId: string;
