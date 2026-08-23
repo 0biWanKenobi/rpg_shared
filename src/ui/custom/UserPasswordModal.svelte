@@ -72,7 +72,7 @@
 </Modal>
 
 <style>
-    .pwd_form {
+    :global(body:not(.is-mobile)) .pwd_form {
         padding: 10px;
     }
 
