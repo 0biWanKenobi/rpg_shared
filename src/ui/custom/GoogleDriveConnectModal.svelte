@@ -23,7 +23,6 @@
         onClose
     }: Props = $props();
 
-    let showLogin = $state(true)
     let showStatus = $derived(!!statusMsg)
     let cancelled = $state<boolean>(false)
     let isOpen = $derived(open && !loginInProgress )
@@ -33,7 +32,6 @@
     })
 
     function login(){
-        showLogin = false;
         loginInProgress = true;
         
         statusMsg = "Waiting for Google sign-in";
@@ -78,11 +76,11 @@
         </div>
     {/if}
     <div class="gdrive-connect-modal-buttons">
-        {#if showLogin}
+        {#if afterLoginButtons}
+            <Button text="Close" class="gdrive-login-btn" cta onClick={(_) => close()}></Button>
+        {:else}
             <Button text="Login" class="gdrive-login-btn" cta onClick={(_) => login()}></Button>
             <Button text="Cancel" onClick={(_) => cancel()}></Button>
-        {:else if afterLoginButtons}
-            <Button text="Close" class="gdrive-login-btn" cta onClick={(_) => close()}></Button>
         {/if}
     </div>
 </Modal>
