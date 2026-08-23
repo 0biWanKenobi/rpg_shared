@@ -10,9 +10,11 @@
     size?: number | null;
     cta?: boolean,
     warning?: boolean,
-    onClick?: (evt: MouseEvent) => void;
-    class?: string;
     disabled?: boolean;
+    loading?: boolean;
+    class?: string;
+    onClick?: (evt: MouseEvent) => (void | Promise<void>);
+
   }
 
   let { 
@@ -26,6 +28,7 @@
     cta = false,
     warning = false,
     disabled = false,
+    loading = $bindable(false)
    }: Props = $props();
 
    onMount(() => {
@@ -33,13 +36,31 @@
       throw new Error("Button cannot have both text and children")
     }
    })
+
+   let onClickLoading = $state(false)
+   const loadingVal = $derived(onClickLoading || loading)
+
+   async function onBtnClick(evt: MouseEvent) {
+
+    onClickLoading = true;
+    try {
+      await onClick(evt)
+    } finally {
+      onClickLoading = false;
+    }
+
+   }
 </script>
 
 <button
-  class={className + (icon ? " icon-button": "") + (warning ? " mod-warning" : "") + (cta? " mod-cta" : "")}
+  class={className}
+  class:icon-button={icon}
+  class:mod-warning={warning}
+  class:mod-cta={cta}
   class:svelcomlib-icon-text={icon}
+  class:mod-loading={loadingVal}
   aria-label={tooltip}
-  onclick={onClick}
+  onclick={onBtnClick}
   {disabled}
 >
   {#if icon}
