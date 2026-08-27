@@ -1,8 +1,11 @@
-interface DriveFolder {
+export type DriveAppProperties = Record<string, string>;
+
+export interface DriveFolder {
   id: string;
   name: string;
   mimeType: string;
   parents?: string[];
+  appProperties?: DriveAppProperties;
 }
 
 type CreateFolderResponse = {
