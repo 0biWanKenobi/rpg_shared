@@ -1,16 +1,19 @@
 <script lang="ts">
 	import Modal from "../obsidian/Modal.svelte";
 	import { Button } from "../base";
+    import type { Snippet } from "svelte";
 
 	type Props = {
 		open?: boolean;
 		title?: string;
+		children?: Snippet
 		onClose?: (confirmed: boolean) => void;
 	};
 
 	let {
 		open = $bindable(false),
 		title = "Confirm",
+		children,
 		onClose,
 	}: Props = $props();
 
@@ -21,6 +24,9 @@
 </script>
 
 <Modal {title} bind:open onClose={() => close(false)} class="confirm-modal">
+	
+	{@render children?.()}
+	
 	<div class="confirm-modal-buttons">
 		<Button text="Yes" warning onClick={() => close(true)} />
 		<Button text="No" onClick={() => close(false)} />
