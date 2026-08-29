@@ -4,6 +4,7 @@ import Tab from "./Tab.svelte"
 import GoogleDriveConnectModal from "./GoogleDriveConnectModal.svelte"
 import ConfirmModal from "./ConfirmModal.svelte"
 import UserPasswordModal from "./UserPasswordModal.svelte"
+import { Notice, CustomOptions } from "./Notice"
 import "../main.css"
 
 export {
@@ -12,5 +13,7 @@ export {
     Tab,
     GoogleDriveConnectModal,
     ConfirmModal,
-    UserPasswordModal
+    UserPasswordModal,
+    Notice,
+    type CustomOptions
 }

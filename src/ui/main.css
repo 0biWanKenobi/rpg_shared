@@ -132,6 +132,23 @@ button.svelcomlib-fail {
   overflow: hidden;
 }
 
+.notice-contents {
+  display: flex;
+  column-gap: 5px;
+
+  & svg{
+      stroke-width: 2.5px;
+  }
+
+  &.warning-notice-contents svg {
+    stroke: var(--text-warning);
+  }
+  
+  &.error-notice-contents svg {
+    stroke: var(--text-error);
+  }
+}
+
 .svelcomlib-notice > code {
   background-color: var(--code-background);
   color: var(--code-normal);
