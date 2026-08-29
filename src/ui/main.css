@@ -1,3 +1,14 @@
+
+
+/**
+*
+* rpg_shared css
+*
+*
+*
+**/
+
+
 .svelcomlib-spinner {
   width: var(--size-4-4);
   height: var(--size-4-4);
@@ -119,9 +130,6 @@ button.svelcomlib-fail {
 
 .svelcomlib-virtual-list-row {
   overflow: hidden;
-}
-
-.svelcomlib-notice {
 }
 
 .svelcomlib-notice > code {
