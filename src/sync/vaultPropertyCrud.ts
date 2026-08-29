@@ -6,26 +6,51 @@ export async function getDriveFolderAppProperties(
     accessToken: string,
     folderId: string,
 ) {
-    const params = new URLSearchParams({
-        fields: "appProperties",
-    });
+    let response: Response | undefined = undefined;
 
-    const response = await fetch(
-        `https://www.googleapis.com/drive/v3/files/${folderId}?${params}`,
-        {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
+    try {
+        const params = new URLSearchParams({
+            fields: "appProperties",
+        });
+    
+        response = await fetch(
+            `https://www.googleapis.com/drive/v3/files/${folderId}?${params}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
             },
-        },
-    );
-
-    if (!response.ok) {
-        throw new Error(
-            `Google Drive error ${response.status}: ${await response.text()}`
         );
+    
+        if (!response.ok) {
+            return {
+                success: false as const,
+                error: `Google Drive error ${response.status}: ${await response.text()}`,
+                errorMessage: `Could not query Google Drive`
+            }
+        }
+        
+    } catch (error) {
+        return {
+            success: false as const,
+            error: `Google Drive error ${error}`,
+            errorMessage: `Could not query Google Drive`
+        }
     }
 
-    return await response.json() as Pick<DriveFolder, "appProperties">;
+    try {
+        const data = await response.json() as Pick<DriveFolder, "appProperties">;
+        return {
+            success: true as const,
+            data
+        }
+    } catch (error) {
+        return {
+            success: false as const,
+            error: `Error deserializing Google Drive API response: ${error}`,
+            errorMessage: `Could not query Google Drive`
+        }
+    }
 }
 
 export async function setDriveAppProperties(
@@ -37,30 +62,56 @@ export async function setDriveAppProperties(
         fields: "id,appProperties",
     });
 
-    const response = await fetch(
-        `https://www.googleapis.com/drive/v3/files/${fileId}?${params}`,
-        {
-            method: "PATCH",
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                appProperties,
-            }),
-        },
-    );
+    let response: Response | undefined = undefined;
 
-    if (!response.ok) {
-        throw new Error(
-            `Google Drive error ${response.status}: ${await response.text()}`
+    try {
+        response = await fetch(
+            `https://www.googleapis.com/drive/v3/files/${fileId}?${params}`,
+            {
+                method: "PATCH",
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    appProperties,
+                }),
+            },
         );
+    
+        if (!response.ok) {
+            return  {
+                success: false as const,
+                error: `Google Drive API error ${response.status}: ${await response.text()}`,
+                errorMessage: 'Could not configure folder properties on Drive',
+            }
+        }
+    }
+    catch(error) {
+        return {
+            success: false as const,
+            error: `Google Drive API error: ${error}.`,
+            errorMessage: 'Could not configure folder properties on Drive'
+        }
     }
 
-    return await response.json() as {
-        id: string;
-        appProperties?: DriveAppProperties;
-    };
+    try {
+        const data = await response.json() as {
+            id: string;
+            appProperties?: DriveAppProperties;
+        };
+
+        return {
+            success: true as const,
+            data
+        }
+    } catch (error) {
+        return {
+            success: false as const,
+            error: `Error deserializing Google Drive API response: ${error}`,
+            errorMessage: 'Could not configure folder properties on Drive'
+        }
+    }
 }
 
 export async function removeDriveAppProperty(
@@ -72,29 +123,57 @@ export async function removeDriveAppProperty(
         fields: "id,appProperties",
     });
 
-    const response = await fetch(
-        `https://www.googleapis.com/drive/v3/files/${fileId}?${params}`,
-        {
-            method: "PATCH",
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                appProperties: {
-                    [key]: null,
-                },
-            }),
-        },
-    );
+    let response: Response | undefined = undefined;
 
-    if (!response.ok) {
-        throw new Error(
-            `Google Drive error ${response.status}: ${await response.text()}`
+    try {
+        response = await fetch(
+            `https://www.googleapis.com/drive/v3/files/${fileId}?${params}`,
+            {
+                method: "PATCH",
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    appProperties: {
+                        [key]: null,
+                    },
+                }),
+            },
         );
+
+        if (!response.ok) {
+            return {
+                success: false as const,
+                error: `Google Drive API error ${response.status}: ${await response.text()}`,
+                errorMessage: "Could not remove folder property on Drive",
+            };
+        }
+    } catch (error) {
+        return {
+            success: false as const,
+            error: `Google Drive API error: ${error}.`,
+            errorMessage: "Could not remove folder property on Drive",
+        };
     }
 
-    return await response.json();
+    try {
+        const data = await response.json() as {
+            id: string;
+            appProperties?: DriveAppProperties;
+        };
+
+        return {
+            success: true as const,
+            data,
+        };
+    } catch (error) {
+        return {
+            success: false as const,
+            error: `Error deserializing Google Drive API response: ${error}`,
+            errorMessage: "Could not remove folder property on Drive",
+        };
+    }
 }
 
 /**
@@ -115,25 +194,47 @@ export async function isDriveFolderEmpty(
         fields: "files(id)",
     });
 
-    const response = await fetch(
-        `https://www.googleapis.com/drive/v3/files?${params}`,
-        {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-        },
-    );
+    let response: Response | undefined = undefined;
 
-    if (!response.ok) {
-        throw new Error(
-            `Google Drive error ${response.status}: ${await response.text()}`
+    try {
+        response = await fetch(
+            `https://www.googleapis.com/drive/v3/files?${params}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            },
         );
+
+        if (!response.ok) {
+            return {
+                success: false as const,
+                error: `Google Drive API error ${response.status}: ${await response.text()}`,
+                errorMessage: "Could not check whether Drive folder is empty",
+            };
+        }
+    } catch (error) {
+        return {
+            success: false as const,
+            error: `Google Drive API error: ${error}.`,
+            errorMessage: "Could not check whether Drive folder is empty",
+        };
     }
 
-    const { files = [], appProperties } = await response.json() as {
-        files?: { id: string }[];
-        appProperties?: DriveFolder['appProperties']
-    };
+    try {
+        const { files = [] } = await response.json() as {
+            files?: { id: string }[];
+        };
 
-    return !files.length
+        return {
+            success: true as const,
+            isEmpty: !files.length,
+        };
+    } catch (error) {
+        return {
+            success: false as const,
+            error: `Error deserializing Google Drive API response: ${error}`,
+            errorMessage: "Could not check whether Drive folder is empty",
+        };
+    }
 }
