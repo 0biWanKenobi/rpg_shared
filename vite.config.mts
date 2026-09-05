@@ -13,7 +13,6 @@ function generateEntries(root: string, paths: string[]) {
 }
 
 const cryptoEntry = fileURLToPath(new URL("./src/crypto.ts", import.meta.url));
-const settingsEntries = generateEntries("settings", ["interfaces", "plugin"])
 const syncEntries =generateEntries("sync", ["googleDriveAuth", "googleDriveOperations", "googleDriveTokenCrypto"]);
 const uiEntries = generateEntries("ui", [
 	"base/index",
@@ -121,7 +120,6 @@ export default defineConfig(({ mode }) => ({
 			entry: {
 				"crypto": cryptoEntry,
 				...syncEntries,
-				...settingsEntries,
 				...uiEntries,
 			},
 			name: "RpgShared",

@@ -13,10 +13,6 @@
   "author": "Obi Wan Kenobi",
   "type": "module",
   "exports": {
-    "./settings/*": {
-      "types": "./dist/settings/*.d.ts",
-      "import": "./dist/settings/*.js"
-    },
     "./ui/*": {
       "types": "./dist/ui/*/index.d.ts",
       "svelte": "./dist/ui/*/index.js",
@@ -70,6 +66,5 @@
     "svelte": "^5.56.3"
   },
   "dependencies": {
-    "@preact/signals": "^2.8.2"
   }
 }
