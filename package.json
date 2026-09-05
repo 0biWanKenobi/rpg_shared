@@ -26,6 +26,10 @@
       "types": "./dist/crypto.d.ts",
       "import": "./dist/crypto.js"
     },
+    "./hash": {
+      "types": "./dist/file/*.d.ts",
+      "import": "./dist/file/index.js"
+    },
     "./styles.css": "./dist/rpg-shared.css"
   },
   "files": [
@@ -38,7 +42,7 @@
     "dev": "vite build --watch --mode development",
     "dev:debug": "vite build --mode development --debug ",
     "dev:yalc": "cross-env PUSH_YALC_ON_WATCH=1 npm run dev",
-    "build:types:svelte": "svelte-package -i src -o dist -p --tsconfig ./tsconfig.json",
+    "build:types:svelte": "svelte-package -i src/ui -o dist/ui -p --tsconfig ./tsconfig.json",
     "build": "vite build",
     "test": "vitest run --config vitest.config.mts",
     "yalc:publish": "run-os",
@@ -66,5 +70,9 @@
     "svelte": "^5.56.3"
   },
   "dependencies": {
+    "@noble/hashes": "^2.4.0"
+  },
+  "allowScripts": {
+    "esbuild@0.27.2": true
   }
 }

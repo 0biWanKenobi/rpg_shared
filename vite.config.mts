@@ -13,12 +13,22 @@ function generateEntries(root: string, paths: string[]) {
 }
 
 const cryptoEntry = fileURLToPath(new URL("./src/crypto.ts", import.meta.url));
-const syncEntries =generateEntries("sync", ["googleDriveAuth", "googleDriveOperations", "googleDriveTokenCrypto"]);
+const syncEntries =generateEntries("sync", [
+	"googleDriveAuth", "googleDriveOperations", "googleDriveTokenCrypto", "vaultPropertyCrud"
+]);
 const uiEntries = generateEntries("ui", [
 	"base/index",
 	"obsidian/index",
 	"custom/index",
 ]);
+const hashEntries = generateEntries("file", ["index"]);
+
+const hashingWorkerEntry =
+	fileURLToPath(
+		new URL("./src/file/hashing.worker.ts", import.meta.url),
+	) + "?worker&inline";
+
+
 function resolveYalcBin(): string {
 	if (process.env.YALC_BIN) {
 		return process.env.YALC_BIN;
@@ -77,7 +87,12 @@ function postBuildPackaging(): Plugin {
 		try {
 			await runCommand( // generate svelte types
 				resolveSveltePackageBin(),
-				["-i", "src", "-o", "dist", "-p", "--tsconfig", "./tsconfig.json"],
+				[
+					"-i", "src/ui",
+					"-o", "dist/ui",
+					"-p",
+					"--tsconfig", "./tsconfig.json",
+				],
 				"svelte-package"
 			);
 			// push to other repos
@@ -121,6 +136,8 @@ export default defineConfig(({ mode }) => ({
 				"crypto": cryptoEntry,
 				...syncEntries,
 				...uiEntries,
+				...hashEntries,
+				"file/hashing.worker.inline": hashingWorkerEntry,
 			},
 			name: "RpgShared",
 			formats: ["es"],
@@ -129,8 +146,6 @@ export default defineConfig(({ mode }) => ({
 		},
 		rollupOptions: {
 			external: [
-				"@preact/signals",
-				"@preact/signals-core",
 				"obsidian",
 				'svelte',
 				/^svelte\//

@@ -1,14 +1,14 @@
 <!-- Copied over from obsidian-periodic-notes -->
-<script lang="ts">
-  interface IOption {
-    value: string;
+<script lang="ts" generics="T">
+  type IOption<TValue> = {
+    value: TValue;
     text: string;
   }
 
-  interface Props {
-    onChange: (value: string, el: HTMLSelectElement) => void;
-    options: IOption[];
-    value: string;
+  type DropdownProps = {
+    onChange: (value: T, el: HTMLSelectElement) => void;
+    options: IOption<T>[];
+    value: T;
     disabled?: boolean;
     class?: string;
   }
@@ -16,19 +16,25 @@
     let {
         onChange = () => {},
         options = [],
-        value = "",
+        value,
         disabled = false,
         class: className = ""
-    }: Props = $props();
+    }: DropdownProps = $props();
+
+    function handleChange(el: HTMLSelectElement): void {
+      const option = options[el.selectedIndex];
+      if (option) onChange(option.value, el);
+    }
 </script>
 
 <select
   class={className ? className + " dropdown" : "dropdown"}
   {disabled}
-  onchange={(e) => onChange(e.currentTarget?.value, e.currentTarget)}
-  {value}
+  onchange={(e) => handleChange(e.currentTarget)}
 >
-  {#each options as { value, text }}
-    <option {value}>{text}</option>
+  {#each options as option, index}
+    <option value={index} selected={Object.is(option.value, value)}>
+      {option.text}
+    </option>
   {/each}
 </select>

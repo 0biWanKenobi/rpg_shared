@@ -7,5 +7,5 @@
     "src/settings.{js,ts,tsx}"
   ],
   "ignoreBinaries": ["yalc"],
-  "ignoreDependencies": ["@jsrob/svelte-portal"]
+  "ignoreDependencies": ["@jsrob/svelte-portal", "@noble/hashes"]
 }
