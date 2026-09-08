@@ -1,3 +1,8 @@
+/**
+ * Custom response from our `oauthRefresh` broker, not a Google Drive API
+ * response. Its success discriminator and `expiresAt` field would require a
+ * runtime adapter before an official Google auth type could replace it.
+ */
 type GoogleRefreshResponse = {
 	success: true
 	access_token: string,
@@ -10,6 +15,11 @@ type GoogleRefreshResponse = {
 	error: string,
 }
 
+/**
+ * Application storage format for encrypted Drive credentials. Official Google
+ * auth credentials use different field names and optionality, so replacing this
+ * type would require runtime migration and conversion code.
+ */
 export type GoogleDriveTokenSet = {
 	accessToken: string;
 	refreshToken?: string;

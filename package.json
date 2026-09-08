@@ -53,6 +53,7 @@
     "yalc:push:linux:darwin": "npm run build && ${YALC_BIN:-$HOME/.local/bin/yalc} push --no-workspace-resolve"
   },
   "devDependencies": {
+    "@googleapis/drive": "^22.0.0",
     "@jsrob/svelte-portal": "^0.2.1",
     "@sveltejs/package": "^2.5.8",
     "@sveltejs/vite-plugin-svelte": "^7.1.2",

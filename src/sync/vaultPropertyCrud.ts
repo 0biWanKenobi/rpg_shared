@@ -1,4 +1,4 @@
-import { DriveAppProperties, DriveFolder } from "./googleDriveOperations";
+import type { drive_v3 } from "@googleapis/drive";
 
 export const VAULT_ID_PROPERTY = "vaultId";
 
@@ -39,7 +39,7 @@ export async function getDriveFolderAppProperties(
     }
 
     try {
-        const data = await response.json() as Pick<DriveFolder, "appProperties">;
+        const data = await response.json() as drive_v3.Schema$File;
         return {
             success: true as const,
             data
@@ -96,10 +96,7 @@ export async function setDriveAppProperties(
     }
 
     try {
-        const data = await response.json() as {
-            id: string;
-            appProperties?: DriveAppProperties;
-        };
+        const data = await response.json() as drive_v3.Schema$File;
 
         return {
             success: true as const,
@@ -158,10 +155,7 @@ export async function removeDriveAppProperty(
     }
 
     try {
-        const data = await response.json() as {
-            id: string;
-            appProperties?: DriveAppProperties;
-        };
+        const data = await response.json() as drive_v3.Schema$File;
 
         return {
             success: true as const,
@@ -222,9 +216,7 @@ export async function isDriveFolderEmpty(
     }
 
     try {
-        const { files = [] } = await response.json() as {
-            files?: { id: string }[];
-        };
+        const { files = [] } = await response.json() as drive_v3.Schema$FileList;
 
         return {
             success: true as const,

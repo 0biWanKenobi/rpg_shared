@@ -1,16 +1,8 @@
-export type DriveAppProperties = Record<string, string>;
-
-export interface DriveFolder {
-  id: string;
-  name: string;
-  mimeType: string;
-  parents?: string[];
-  appProperties?: DriveAppProperties;
-}
+import type { drive_v3 } from "@googleapis/drive";
 
 type CreateFolderResponse = {
   success: true;
-  folder: DriveFolder;
+  folder: drive_v3.Schema$File;
 } | {
   success: false;
   error: string;
@@ -23,7 +15,7 @@ export async function createFolder(
   folderName: string,
   config: {
 	  parentFolderId?: string
-	  properties?: Record<string, any>
+	  properties?: NonNullable<drive_v3.Schema$File["appProperties"]>
   } = {}
 ): Promise<CreateFolderResponse> {
   const response = await fetch(
@@ -55,7 +47,7 @@ export async function createFolder(
     }
   }
 
-  const folder = await response.json() as DriveFolder;
+  const folder = await response.json() as drive_v3.Schema$File;
   return { success: true, folder };
 }
 
@@ -130,16 +122,6 @@ export async function deleteFolder(
 }
 
 
-/** Minimal Drive metadata required for document sync. */
-export type DriveDocumentMetadata = {
-	id: string;
-	name: string;
-	sha256Checksum?: string;
-	version?: string;
-	modifiedTime?: string;
-};
-
-
 /** Finds the Drive file associated with an RPG document ID. */
 export async function findDriveDocumentByDocId(
 	accessToken: string,
@@ -175,9 +157,7 @@ export async function findDriveDocumentByDocId(
     }
 	}
 
-	const files = (await response.json() as {
-		files?: DriveDocumentMetadata[];
-	}).files ?? [];
+	const files = (await response.json() as drive_v3.Schema$FileList).files ?? [];
 
 	if (!files.length) return {
     success: true as const,
@@ -193,7 +173,7 @@ export async function findDriveDocumentByDocId(
 	}
 
 	return {
-    metadata: files[0] as DriveDocumentMetadata,
+    metadata: files[0]!,
     success: true as const
   };
 }
@@ -206,7 +186,7 @@ export async function createDriveDocument(
 	name: string,
 	content: string,
 ): Promise<
-	| { success: true; metadata: DriveDocumentMetadata }
+	| { success: true; metadata: drive_v3.Schema$File }
 	| { success: false; error: string; errorMessage: string }
 > {
 	const boundary = `rpg_${crypto.randomUUID()}`;
@@ -259,7 +239,7 @@ export async function createDriveDocument(
 
 	return {
 		success: true,
-		metadata: await response.json() as DriveDocumentMetadata,
+		metadata: await response.json() as drive_v3.Schema$File,
 	};
 }
 
@@ -269,7 +249,7 @@ export async function updateDriveDocument(
 	fileId: string,
 	content: string,
 ): Promise<
-	| { success: true; metadata: DriveDocumentMetadata }
+	| { success: true; metadata: drive_v3.Schema$File }
 	| { success: false; error: string; errorMessage: string }
 > {
 	const params = new URLSearchParams({
@@ -299,7 +279,7 @@ export async function updateDriveDocument(
 
 	return {
 		success: true,
-		metadata: await response.json() as DriveDocumentMetadata,
+		metadata: await response.json() as drive_v3.Schema$File,
 	};
 }
 
