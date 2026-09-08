@@ -14,7 +14,7 @@ function generateEntries(root: string, paths: string[]) {
 
 const cryptoEntry = fileURLToPath(new URL("./src/crypto.ts", import.meta.url));
 const syncEntries =generateEntries("sync", [
-	"googleDriveAuth", "googleDriveOperations", "googleDriveTokenCrypto", "vaultPropertyCrud"
+	"googleDriveAuth", "googleDriveOperations", "googleDriveTokenCrypto", "vaultPropertyCrud", "engine/index"
 ]);
 const uiEntries = generateEntries("ui", [
 	"base/index",
@@ -28,6 +28,7 @@ const hashingWorkerEntry =
 		new URL("./src/file/hashing.worker.ts", import.meta.url),
 	) + "?worker&inline";
 
+const typesEntry = fileURLToPath(new URL("./src/types.ts", import.meta.url));
 
 function resolveYalcBin(): string {
 	if (process.env.YALC_BIN) {
@@ -138,6 +139,7 @@ export default defineConfig(({ mode }) => ({
 				...uiEntries,
 				...hashEntries,
 				"file/hashing.worker.inline": hashingWorkerEntry,
+				"types": typesEntry
 			},
 			name: "RpgShared",
 			formats: ["es"],

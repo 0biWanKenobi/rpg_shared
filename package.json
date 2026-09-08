@@ -18,6 +18,10 @@
       "svelte": "./dist/ui/*/index.js",
       "import": "./dist/ui/*/index.js"
     },
+    "./sync/engine": {
+      "types": "./dist/sync/engine/index.d.ts",
+      "import": "./dist/sync/engine/index.js"
+    },
     "./sync/*": {
       "types": "./dist/sync/*.d.ts",
       "import": "./dist/sync/*.js"
@@ -29,6 +33,9 @@
     "./hash": {
       "types": "./dist/file/*.d.ts",
       "import": "./dist/file/index.js"
+    },
+    "./types": {
+      "types": "./dist/types.d.ts"
     },
     "./styles.css": "./dist/rpg-shared.css"
   },
