@@ -1,5 +1,5 @@
 import HashingWorker from "./hashing.worker.ts?worker&inline";
-import { WorkerCommand, WorkerResponse } from "./worker.types";
+import type { WorkerCommand, WorkerResponse } from "./worker.types";
 
 
 

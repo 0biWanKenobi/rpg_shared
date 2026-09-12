@@ -14,6 +14,7 @@
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
     "useUnknownInCatchVariables": true,
+    "verbatimModuleSyntax": true,
     "types": ["node", "svelte", "vite/client"],
     "lib": [
       "ES2020",

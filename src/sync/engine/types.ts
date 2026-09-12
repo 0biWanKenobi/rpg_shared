@@ -1,7 +1,7 @@
-import { drive_v3 } from "@googleapis/drive/build/v3";
-import type { Plugin, TAbstractFile, Vault } from "obsidian";
-import { VaultScanParams } from "./main";
-import { Result } from "../../types";
+import type { drive_v3 } from "@googleapis/drive/build/v3";
+import type { TAbstractFile } from "obsidian";
+import type { VaultScanParams } from "./main";
+import type { Result } from "../../types";
 
 
 export type VaultEvent = 'create' | 'modify' | 'delete' | 'rename';
