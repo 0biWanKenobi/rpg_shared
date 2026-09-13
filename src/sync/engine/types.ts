@@ -1,4 +1,4 @@
-import type { drive_v3 } from "@googleapis/drive/build/v3";
+import type { drive_v3 } from "@googleapis/drive";
 import type { TAbstractFile } from "obsidian";
 import type { VaultScanParams } from "./main";
 import type { Result } from "../../types";
