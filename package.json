@@ -78,6 +78,7 @@
   },
   "dependencies": {
     "@googleapis/drive": "^22.0.0",
+    "@journeyapps/wa-sqlite": "^2.0.4",
     "@noble/hashes": "^2.4.0"
   },
   "allowScripts": {
